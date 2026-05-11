@@ -1,244 +1,273 @@
-```html
+```html٦٦
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart WIFI Azilal | 2024-2036</title>
-    <!-- تضمين مكتبة Tailwind CSS للتصميم -->
+    <title>Smart WIFI Azilal</title>
+    
+    <!-- تحميل مكتبة التنسيق -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background-color: #f1f5f9; -webkit-tap-highlight-color: transparent; }
-        .year-btn { transition: all 0.2s; border: 1px solid #e2e8f0; position: relative; }
-        .year-btn.active { background-color: #0f172a; color: #fbbf24; border-color: #fbbf24; transform: scale(1.05); z-index: 10; font-weight: bold; }
-        .year-btn.has-data::after { content: ''; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #fbbf24; border-radius: 50%; box-shadow: 0 0 5px rgba(251, 191, 36, 0.5); }
-        .month-btn { transition: all 0.2s; border: 1px solid #e2e8f0; }
-        .month-btn.active { background-color: #fbbf24; color: #0f172a; border-color: #0f172a; font-weight: bold; box-shadow: 0 4px 10px rgba(251, 191, 36, 0.3); }
+        * { font-family: 'Tajawal', sans-serif; }
+        body { background-color: #f8fafc; margin: 0; padding: 0; }
         .hidden { display: none !important; }
         
-        /* Loading Animation */
-        .loader-ring { display: inline-block; width: 50px; height: 50px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fbbf24; animation: spin 1s ease-in-out infinite; }
+        /* تأثيرات الأزرار النشطة */
+        .year-btn.active { background: #0f172a; color: #fbbf24; border-color: #fbbf24; }
+        .month-btn.active { background: #fbbf24; color: #0f172a; font-weight: bold; border-color: #0f172a; }
+        
+        /* شاشة التحميل المطورة */
+        #loader { 
+            position: fixed; inset: 0; background: #0f172a; z-index: 999; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            color: white; transition: opacity 0.5s ease-out; 
+        }
+        .loader-spin { 
+            width: 50px; height: 50px; border: 5px solid #1e293b; 
+            border-top-color: #fbbf24; border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="text-slate-800">
+<body>
 
-    <!-- شاشة التحميل (تظهر فقط عند البداية) -->
-    <div id="loading-screen" class="fixed inset-0 bg-slate-900 z-[100] flex flex-col items-center justify-center text-white p-6 transition-all duration-500">
-        <div class="loader-ring mb-4"></div>
-        <h1 class="text-xl font-bold tracking-widest mb-2 italic">SMART WIFI <span class="text-yellow-400">AZILAL</span></h1>
-        <p id="loading-msg" class="text-slate-400 text-sm">جاري جلب البيانات من السيرفر...</p>
+    <!-- شاشة التحميل -->
+    <div id="loader">
+        <div class="loader-spin mb-6"></div>
+        <h1 class="font-black text-2xl tracking-tighter">SMART WIFI <span class="text-yellow-400">AZILAL</span></h1>
+        <p id="loader-status" class="text-slate-400 text-sm mt-4">جاري الاتصال بقاعدة البيانات...</p>
     </div>
 
-    <!-- رأس الصفحة -->
-    <header class="bg-slate-900 text-white p-5 text-center border-b-4 border-yellow-400 shadow-xl sticky top-0 z-40">
-        <h1 class="text-xl font-black italic">SMART WIFI <span class="text-yellow-400">AZILAL</span></h1>
-    </header>
+    <div id="app-wrapper" class="min-h-screen pb-10">
+        <!-- الهيدر -->
+        <header class="bg-slate-900 text-white p-5 text-center border-b-4 border-yellow-400 sticky top-0 z-40 shadow-lg">
+            <h1 class="text-xl font-black italic">SMART WIFI <span class="text-yellow-400">AZILAL</span></h1>
+        </header>
 
-    <main class="max-w-md mx-auto p-4 pb-24">
-        
-        <!-- واجهة تسجيل الدخول -->
-        <div id="view-login" class="bg-white rounded-[2.5rem] p-8 shadow-2xl mt-10 border border-slate-100">
-            <div class="text-center mb-8">
-                <h2 class="text-xl font-bold text-slate-800">بوابة الدخول</h2>
-                <p class="text-slate-400 text-xs mt-1">أدخل رقم التعريف الخاص بك</p>
-            </div>
-            <div class="space-y-4">
-                <input type="text" id="login-id" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center text-xl focus:border-yellow-400 outline-none transition-all" placeholder="رقم الهاتف أو التعريف">
-                <button onclick="app.login()" class="w-full bg-slate-900 text-yellow-400 font-bold p-4 rounded-2xl shadow-lg active:scale-95 transition-transform">دخول</button>
-            </div>
-        </div>
-
-        <!-- واجهة المدير -->
-        <div id="view-admin" class="hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 shadow-lg border border-slate-100">
-                <h3 class="font-bold text-lg mb-4 flex items-center gap-2 underline decoration-yellow-400 underline-offset-8">إدارة المشتركين</h3>
-                
-                <div class="space-y-3">
-                    <input type="text" id="adm-name" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none" placeholder="الاسم الكامل">
-                    <input type="text" id="adm-id" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none" placeholder="رقم التعريف">
-                    <input type="number" id="adm-price" class="w-full p-4 bg-slate-50 border rounded-2xl outline-none" placeholder="ثمن الاشتراك (د.م)">
-                </div>
-
-                <div class="mt-6">
-                    <p class="text-xs font-bold text-slate-400 mb-3">اختر السنة للتعديل:</p>
-                    <div id="year-grid" class="grid grid-cols-4 gap-2"></div>
-                </div>
-
-                <div id="month-section" class="mt-6 bg-slate-50 p-4 rounded-2xl hidden border border-slate-100">
-                    <div class="flex justify-between items-center mb-4 px-1">
-                        <p class="text-xs font-bold text-slate-500">سنة <span id="selected-year-label" class="text-slate-900"></span></p>
-                        <button onclick="app.clearCurrentYear()" class="text-[10px] text-red-500 font-bold">تفريغ</button>
+        <main class="max-w-md mx-auto p-4">
+            <!-- قسم الدخول -->
+            <section id="view-login" class="mt-12 bg-white rounded-[2rem] p-8 shadow-2xl border border-slate-100">
+                <div class="text-center mb-8">
+                    <div class="bg-yellow-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                     </div>
-                    <div id="month-grid" class="grid grid-cols-3 gap-2"></div>
+                    <h2 class="font-bold text-2xl text-slate-800">تسجيل الدخول</h2>
+                    <p class="text-slate-400 text-sm mt-1">أدخل معرف المشترك للمتابعة</p>
+                </div>
+                
+                <div class="space-y-4">
+                    <input type="text" id="login-id" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center text-xl font-bold outline-none focus:border-yellow-400 transition-all" placeholder="06XXXXXXXX">
+                    <button onclick="app.handleLogin()" class="w-full bg-slate-900 text-yellow-400 font-black p-4 rounded-2xl shadow-lg active:scale-95 transition-transform">دخول النظام</button>
+                </div>
+            </section>
+
+            <!-- واجهة المشرف -->
+            <section id="view-admin" class="hidden space-y-6 mt-4">
+                <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-100">
+                    <h3 class="font-bold mb-4 text-lg flex items-center gap-2">
+                        <span class="w-2 h-6 bg-yellow-400 rounded-full"></span>
+                        إضافة / تعديل مشترك
+                    </h3>
+                    <div class="space-y-3">
+                        <input type="text" id="adm-name" class="w-full p-4 bg-slate-50 border rounded-xl outline-none" placeholder="الاسم الكامل">
+                        <input type="text" id="adm-id" class="w-full p-4 bg-slate-50 border rounded-xl outline-none" placeholder="رقم التعريف (الهاتف)">
+                        <input type="number" id="adm-price" class="w-full p-4 bg-slate-50 border rounded-xl outline-none" placeholder="السعر الشهري (درهم)">
+                        
+                        <p class="text-xs font-bold text-slate-500 mt-4 px-1">اختر السنة ثم الشهور المدفوعة:</p>
+                        <div id="year-grid" class="grid grid-cols-4 gap-2"></div>
+                        <div id="month-grid" class="grid grid-cols-3 gap-2 mt-4 p-3 bg-slate-50 rounded-xl border border-dashed border-slate-200 hidden"></div>
+                        
+                        <div class="flex gap-2 mt-6">
+                            <button onclick="app.saveData()" class="flex-1 bg-slate-900 text-yellow-400 font-bold p-4 rounded-xl shadow-md">حفظ البيانات</button>
+                            <button onclick="app.resetForm()" class="bg-slate-200 text-slate-600 p-4 rounded-xl">إلغاء</button>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="pt-6 mt-6 border-t space-y-3">
-                    <button id="save-btn" onclick="app.save()" class="w-full bg-slate-900 text-yellow-400 p-4 rounded-2xl font-bold shadow-xl active:scale-95 transition-all">حفظ البيانات نهائياً</button>
-                    <button onclick="app.resetForm()" class="w-full text-slate-400 text-xs py-2">تفريغ الخانات</button>
+                <div class="flex items-center justify-between px-2">
+                    <h3 class="font-bold text-slate-800">قائمة المشتركين الحاليين</h3>
+                    <span id="client-count" class="bg-slate-200 text-slate-700 text-[10px] px-2 py-1 rounded-full font-bold">0</span>
                 </div>
-            </div>
+                <div id="admin-list" class="space-y-3"></div>
+                
+                <button onclick="location.reload()" class="w-full py-8 text-slate-400 text-xs font-bold tracking-widest">تـسـجـيـل الـخـروج</button>
+            </section>
 
-            <div id="admin-list" class="space-y-3"></div>
-            <button onclick="location.reload()" class="w-full p-4 text-slate-400 underline text-xs">خروج</button>
-        </div>
-
-        <!-- واجهة الزبون -->
-        <div id="view-client" class="hidden space-y-6">
-            <div class="bg-slate-900 text-white p-8 rounded-[3rem] text-center shadow-2xl relative overflow-hidden">
-                <h2 id="c-name" class="text-2xl font-bold mb-6">---</h2>
-                <div class="bg-white/5 py-5 rounded-[2rem] border border-white/10">
-                    <p class="text-[10px] opacity-40 uppercase tracking-widest font-bold">المبلغ المطلوب</p>
-                    <div class="text-5xl font-black text-yellow-400"><span id="c-total-due">0</span> <small class="text-lg">د.م</small></div>
+            <!-- واجهة المشترك -->
+            <section id="view-client" class="hidden space-y-4">
+                <div class="bg-slate-900 text-white p-8 rounded-[2.5rem] text-center shadow-2xl relative overflow-hidden">
+                    <div class="absolute -top-10 -right-10 w-32 h-32 bg-yellow-400/10 rounded-full"></div>
+                    <h2 id="c-name" class="text-2xl font-black mb-2">--</h2>
+                    <p class="text-yellow-400/60 text-xs mb-6 tracking-widest uppercase">Member Status: Active</p>
+                    
+                    <div class="bg-white/5 backdrop-blur-sm py-6 rounded-3xl border border-white/10">
+                        <p class="text-xs opacity-60 mb-1">المبلغ الإجمالي المطلوب سداده</p>
+                        <div class="text-5xl font-black text-yellow-400"><span id="c-due">0</span> <small class="text-lg">DH</small></div>
+                    </div>
                 </div>
-            </div>
 
-            <div id="client-years-area" class="space-y-4"></div>
-            <button onclick="location.reload()" class="w-full p-4 bg-white text-slate-400 font-bold rounded-2xl shadow-sm border">تسجيل الخروج</button>
-        </div>
+                <div class="flex items-center gap-2 px-2 mt-6">
+                    <svg class="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>
+                    <h3 class="font-bold text-slate-800">سجل الدفعات التفصيلي</h3>
+                </div>
+                
+                <div id="client-history" class="space-y-4"></div>
+                
+                <button onclick="location.reload()" class="w-full p-5 bg-white text-slate-400 font-bold rounded-2xl border-2 border-slate-100 mt-8">خروج من الحساب</button>
+            </section>
+        </main>
+    </div>
 
-    </main>
-
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-slate-900 text-yellow-400 px-6 py-3 rounded-full shadow-2xl hidden z-[110] text-sm font-bold border border-yellow-400/20"></div>
+    <!-- التنبيهات -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-slate-900 text-yellow-400 px-8 py-4 rounded-2xl text-sm font-black hidden z-[1000] shadow-2xl border border-yellow-400/20 whitespace-nowrap"></div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        const months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        const years = Array.from({length: 13}, (_, i) => 2024 + i);
+        const MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+        const YEARS = Array.from({length: 5}, (_, i) => 2024 + i);
         const ADMIN_ID = "0602359188";
         
-        let db, auth, clients = [], currentYear = null, editingPayments = {}, isDataReady = false;
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'azilal_v_ultimate';
+        let db, auth, clients = [], activeYear = null, editingPayments = {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'azilal_wifi_v1';
 
         const app = {
             async init() {
                 try {
-                    const config = JSON.parse(__firebase_config);
-                    const fireApp = initializeApp(config);
-                    db = getFirestore(fireApp);
-                    auth = getAuth(fireApp);
-
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    const firebaseApp = initializeApp(firebaseConfig);
+                    db = getFirestore(firebaseApp);
+                    auth = getAuth(firebaseApp);
+                    
                     onAuthStateChanged(auth, (user) => {
-                        if (user) this.sync();
-                        else signInAnonymously(auth);
+                        if (user) {
+                            this.startSync();
+                        } else {
+                            signInAnonymously(auth).catch(e => this.error("خطأ في الاتصال: " + e.message));
+                        }
                     });
                 } catch (e) {
-                    document.getElementById('loading-msg').innerText = "خطأ في الاتصال بالسيرفر";
+                    this.error("فشل في تهيئة النظام: " + e.message);
                 }
             },
 
-            sync() {
+            startSync() {
+                const loaderStatus = document.getElementById('loader-status');
                 const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'clients');
+                
                 onSnapshot(colRef, (snap) => {
-                    clients = snap.docs.map(d => d.data());
-                    isDataReady = true;
+                    clients = snap.docs.map(d => ({ ...d.data(), firebaseId: d.id }));
                     this.renderAdminList();
-                    document.getElementById('loading-screen').style.opacity = '0';
-                    setTimeout(() => document.getElementById('loading-screen').classList.add('hidden'), 500);
+                    
+                    // إخفاء شاشة التحميل
+                    const loader = document.getElementById('loader');
+                    loader.style.opacity = '0';
+                    setTimeout(() => loader.classList.add('hidden'), 500);
+                }, (err) => {
+                    this.error("فشل مزامنة البيانات: " + err.message);
                 });
             },
 
-            renderYearGrid() {
+            handleLogin() {
+                const idInput = document.getElementById('login-id').value.trim();
+                if (!idInput) return this.showToast("يرجى إدخال المعرف");
+
+                if (idInput === ADMIN_ID) {
+                    this.switchView('view-admin');
+                    this.renderYears();
+                } else {
+                    const client = clients.find(c => c.id === idInput);
+                    if (client) {
+                        this.renderClientPortal(client);
+                        this.switchView('view-client');
+                    } else {
+                        this.showToast("المعذرة، هذا المعرف غير مسجل");
+                    }
+                }
+            },
+
+            renderYears() {
                 const grid = document.getElementById('year-grid');
-                grid.innerHTML = years.map(y => `
-                    <button onclick="app.selectYear(${y})" id="yr-${y}" 
-                        class="year-btn p-3 text-sm rounded-xl bg-white shadow-sm border border-slate-200 ${editingPayments[y] && editingPayments[y].length > 0 ? 'has-data' : ''}">
-                        ${y}
-                    </button>
+                grid.innerHTML = YEARS.map(y => `
+                    <button onclick="app.selectYear(${y})" id="y-btn-${y}" class="p-3 text-xs bg-white border-2 rounded-xl year-btn transition-all ${editingPayments[y]?.length ? 'border-yellow-400 font-bold' : 'border-slate-100'}">${y}</button>
                 `).join('');
             },
 
             selectYear(y) {
-                currentYear = y;
+                activeYear = y;
                 document.querySelectorAll('.year-btn').forEach(b => b.classList.remove('active'));
-                document.getElementById(`yr-${y}`).classList.add('active');
-                document.getElementById('selected-year-label').innerText = y;
-                document.getElementById('month-section').classList.remove('hidden');
-                this.renderMonthGrid();
+                document.getElementById(`y-btn-${y}`).classList.add('active');
+                
+                const mGrid = document.getElementById('month-grid');
+                mGrid.classList.remove('hidden');
+                this.renderMonths();
             },
 
-            renderMonthGrid() {
+            renderMonths() {
                 const grid = document.getElementById('month-grid');
-                const paid = editingPayments[currentYear] || [];
-                grid.innerHTML = months.map(m => `
-                    <button onclick="app.toggleMonth('${m}')" id="m-${m}" 
-                        class="month-btn p-3 text-xs rounded-xl ${paid.includes(m) ? 'active' : 'bg-white'}">
-                        ${m}
-                    </button>
+                const paidInYear = editingPayments[activeYear] || [];
+                grid.innerHTML = MONTHS.map(m => `
+                    <button onclick="app.toggleMonth('${m}')" class="p-3 text-[10px] rounded-xl border-2 transition-all ${paidInYear.includes(m) ? 'month-btn active' : 'bg-white border-slate-100 text-slate-400'}">${m}</button>
                 `).join('');
             },
 
             toggleMonth(m) {
-                if (!editingPayments[currentYear]) editingPayments[currentYear] = [];
-                const idx = editingPayments[currentYear].indexOf(m);
-                if (idx > -1) editingPayments[currentYear].splice(idx, 1);
-                else editingPayments[currentYear].push(m);
-                this.renderMonthGrid();
-                const yrBtn = document.getElementById(`yr-${currentYear}`);
-                if (editingPayments[currentYear].length > 0) yrBtn.classList.add('has-data');
-                else yrBtn.classList.remove('has-data');
+                if (!editingPayments[activeYear]) editingPayments[activeYear] = [];
+                const idx = editingPayments[activeYear].indexOf(m);
+                
+                if (idx > -1) editingPayments[activeYear].splice(idx, 1);
+                else editingPayments[activeYear].push(m);
+                
+                this.renderMonths();
+                this.renderYears();
             },
 
-            clearCurrentYear() {
-                if (!currentYear) return;
-                editingPayments[currentYear] = [];
-                this.renderMonthGrid();
-                document.getElementById(`yr-${currentYear}`).classList.remove('has-data');
-            },
-
-            login() {
-                if (!isDataReady) return this.toast("جاري تحميل البيانات..");
-                const id = document.getElementById('login-id').value.trim();
-                if (id === ADMIN_ID) {
-                    this.switchView('view-admin');
-                    this.renderYearGrid();
-                } else {
-                    const c = clients.find(x => x.id === id);
-                    if (c) { this.renderClientDashboard(c); this.switchView('view-client'); }
-                    else { this.toast("رقم التعريف غير موجود"); }
-                }
-            },
-
-            async save() {
+            async saveData() {
                 const name = document.getElementById('adm-name').value.trim();
                 const id = document.getElementById('adm-id').value.trim();
-                const price = document.getElementById('adm-price').value;
-                if (!name || !id || !price) return this.toast("أكمل البيانات");
-                const btn = document.getElementById('save-btn');
-                btn.disabled = true;
-                btn.innerText = "جاري الحفظ...";
+                const price = document.getElementById('adm-price').value.trim();
+
+                if (!name || !id || !price) return this.showToast("يرجى ملء جميع الحقول الأساسية");
+
                 try {
                     await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clients', id), {
-                        name, id, price: Number(price),
+                        name, id, price: Number(price), 
                         payments: editingPayments,
                         lastUpdate: Date.now()
                     });
-                    this.toast("تم الحفظ بنجاح ✅");
+                    this.showToast("تم حفظ بيانات المشترك بنجاح ✅");
                     this.resetForm();
-                } catch (e) { this.toast("خطأ في الحفظ"); }
-                btn.disabled = false;
-                btn.innerText = "حفظ البيانات نهائياً";
+                } catch (e) {
+                    this.showToast("خطأ أثناء الحفظ");
+                }
             },
 
             renderAdminList() {
                 const list = document.getElementById('admin-list');
-                if (!isDataReady || clients.length === 0) {
-                    list.innerHTML = `<div class="p-4 text-center text-slate-300 text-sm">لا يوجد زبائن</div>`;
+                document.getElementById('client-count').innerText = clients.length;
+                
+                if (clients.length === 0) {
+                    list.innerHTML = `<div class="text-center py-10 text-slate-300 text-sm">لا يوجد مشتركين حالياً</div>`;
                     return;
                 }
-                list.innerHTML = `<p class="text-[10px] font-bold text-slate-400 mb-2">قائمة المشتركين (${clients.length})</p>` + 
-                clients.sort((a,b) => (b.lastUpdate || 0) - (a.lastUpdate || 0)).map(c => `
-                    <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border mb-2">
-                        <div onclick="app.editClient('${c.id}')" class="flex-1 cursor-pointer">
-                            <div class="font-bold text-sm">${c.name}</div>
-                            <div class="text-[10px] text-slate-400">ID: ${c.id} • ${c.price} د.م</div>
+
+                list.innerHTML = clients.map(c => `
+                    <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-slate-100 hover:border-yellow-200 transition-all">
+                        <div onclick="app.editClient('${c.id}')" class="flex-1">
+                            <div class="font-bold text-slate-800">${c.name}</div>
+                            <div class="text-[10px] text-slate-400 mt-1 flex gap-2">
+                                <span>ID: ${c.id}</span>
+                                <span class="bg-slate-100 px-1 rounded">${c.price} DH/Month</span>
+                            </div>
                         </div>
-                        <button onclick="app.deleteClient('${c.id}')" class="text-red-300 p-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                        <button onclick="app.deleteClient('${c.id}')" class="p-2 text-red-300 hover:text-red-500 transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                         </button>
                     </div>
                 `).join('');
@@ -250,86 +279,30 @@
                 document.getElementById('adm-id').value = c.id;
                 document.getElementById('adm-price').value = c.price;
                 editingPayments = JSON.parse(JSON.stringify(c.payments || {}));
-                this.renderYearGrid();
-                document.getElementById('month-section').classList.add('hidden');
-                window.scrollTo({top: 0, behavior: 'smooth'});
+                this.renderYears();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             },
 
             async deleteClient(id) {
-                if (confirm("حذف الزبون؟")) {
+                if (confirm("هل أنت متأكد من حذف هذا المشترك نهائياً؟")) {
                     await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clients', id));
-                    this.toast("تم الحذف");
+                    this.showToast("تم الحذف");
                 }
             },
 
-            renderClientDashboard(c) {
+            renderClientPortal(c) {
                 document.getElementById('c-name').innerText = c.name;
-                const area = document.getElementById('client-years-area');
-                area.innerHTML = '';
-                let totalDue = 0;
+                const historyDiv = document.getElementById('client-history');
+                historyDiv.innerHTML = '';
+                
+                let totalUnpaidAmount = 0;
                 const now = new Date();
-                const thisYear = now.getFullYear();
-                const thisMonthIdx = now.getMonth();
+                const currentY = now.getFullYear();
+                const currentMIdx = now.getMonth();
 
-                const relevantYears = years.filter(y => y <= thisYear || (c.payments && c.payments[y])).reverse();
-
-                relevantYears.forEach(y => {
-                    const paid = (c.payments && c.payments[y]) ? c.payments[y] : [];
-                    let targetMonths = (y < thisYear) ? [...months] : (y === thisYear ? months.slice(0, thisMonthIdx + 1) : []);
-                    const unpaid = targetMonths.filter(m => !paid.includes(m));
-                    totalDue += (unpaid.length * c.price);
-
-                    if (targetMonths.length > 0 || paid.length > 0) {
-                        const card = document.createElement('div');
-                        card.className = "bg-white rounded-[2rem] p-6 shadow-sm border";
-                        card.innerHTML = `
-                            <div class="flex justify-between items-center mb-4 border-b pb-2">
-                                <h4 class="font-bold">سنة ${y}</h4>
-                                <span class="text-[10px] font-bold ${unpaid.length === 0 ? 'text-green-500' : 'text-red-500'}">
-                                    ${unpaid.length === 0 ? 'خالص ✅' : 'باقي ' + (unpaid.length * c.price) + ' د.م'}
-                                </span>
-                            </div>
-                            <div class="grid grid-cols-3 gap-2">
-                                ${months.map(m => {
-                                    const isPaid = paid.includes(m);
-                                    if (!isPaid && !targetMonths.includes(m)) return '';
-                                    return `<div class="text-[9px] p-2 text-center rounded-xl border ${isPaid ? 'bg-green-50 text-green-600 border-green-100 font-bold' : 'bg-red-50 text-red-400 border-red-100 italic'}">${m}</div>`;
-                                }).join('')}
-                            </div>
-                        `;
-                        area.appendChild(card);
-                    }
-                });
-                document.getElementById('c-total-due').innerText = totalDue;
-            },
-
-            resetForm() {
-                document.getElementById('adm-name').value = '';
-                document.getElementById('adm-id').value = '';
-                document.getElementById('adm-price').value = '';
-                editingPayments = {};
-                currentYear = null;
-                document.getElementById('month-section').classList.add('hidden');
-                this.renderYearGrid();
-            },
-
-            switchView(id) {
-                ['view-login', 'view-admin', 'view-client'].forEach(v => document.getElementById(v).classList.add('hidden'));
-                document.getElementById(id).classList.remove('hidden');
-            },
-
-            toast(msg) {
-                const t = document.getElementById('toast');
-                t.innerText = msg;
-                t.classList.remove('hidden');
-                setTimeout(() => t.classList.add('hidden'), 3000);
-            }
-        };
-
-        window.app = app;
-        app.init();
-    </script>
-</body>
-</html>
+                // عرض آخر سنتين فقط أو السنوات التي بها دفعات
+                YEARS.filter(y => y <= currentY).reverse().forEach(y => {
+                    const paidMonths = c.payments?.[y] || [];
+                    const monthsToCheckingCount = (y < currentY) ? 12 : currentMIdx + 1;
 
 ```
