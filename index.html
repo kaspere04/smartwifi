@@ -1,10 +1,10 @@
-0602359188 Hassan
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SMART WIFI AZILAL - نظام الإدارة النهائي</title>
+    <title>SMART WIFI AZILAL - نظام الإدارة المطور</title>
     <style>
         :root { --gold: #FFCC00; --dark: #111; --bg: #f8f9fa; --red: #e74c3c; --green: #2ecc71; --gray: #888; }
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -54,14 +54,14 @@
     </header>
 
     <div class="container">
-        <!-- View: Login -->
+        <!-- تسجيل الدخول -->
         <div id="view-login" class="card">
             <h3 style="margin-top:0">بوابة الزبناء</h3>
             <input type="text" id="login-id" placeholder="ID المشترك">
             <button class="btn-main" onclick="app.login()">تسجيل الدخول</button>
         </div>
 
-        <!-- View: Subscriber -->
+        <!-- واجهة المشترك -->
         <div id="view-user" class="hidden">
             <div class="u-card">
                 <div style="font-size:12px; opacity:0.7">مرحباً بك:</div>
@@ -76,18 +76,18 @@
             <button class="btn-main" style="margin-top:20px; background:#eee; color:#333;" onclick="location.reload()">خروج</button>
         </div>
 
-        <!-- View: Admin -->
+        <!-- واجهة الإدارة -->
         <div id="view-admin" class="hidden">
             <div class="card" style="text-align:right">
                 <h3 style="margin-top:0">إدارة الزبائن</h3>
                 <input type="text" id="adm-name" placeholder="الاسم الكامل">
                 <input type="text" id="adm-id" placeholder="ID المشترك">
                 <input type="number" id="adm-price" placeholder="الثمن الشهري">
-                <label style="font-size:12px; font-weight:bold;">السنة:</label>
-                <select id="adm-year" onchange="app.initAdminUI()"></select>
-                <label style="font-size:12px; font-weight:bold;">الأشهر المؤداة (لهذه السنة):</label>
+                <label style="font-size:12px; font-weight:bold;">اختر السنة للعرض/التعديل:</label>
+                <select id="adm-year" onchange="app.refreshMonthUI()"></select>
+                <label style="font-size:12px; font-weight:bold;">الأشهر المؤداة لهذه السنة:</label>
                 <div class="m-grid" id="adm-months"></div>
-                <button class="btn-main" id="btn-save" onclick="app.save()">حفظ التعديلات</button>
+                <button class="btn-main" id="btn-save" onclick="app.save()">حفظ التعديلات النهائية</button>
             </div>
             <div id="adm-list"></div>
         </div>
@@ -99,14 +99,14 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
         const ADMIN_PIN = "0602359188";
-        const APP_ID = "wifi-azilal-v5"; 
+        const APP_ID = "wifi-azilal-v6"; // معرف جديد لبيانات نظيفة
         const monthsNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
         
         const now = new Date();
         const currentMonthIdx = now.getMonth();
         const currentYear = now.getFullYear();
 
-        let db, clients = [], selectedPaidKeys = [];
+        let db, clients = [], currentClientPaidData = []; // تخزين كل الشهور لكل السنوات
 
         const app = {
             async init() {
@@ -129,12 +129,12 @@
                         clients = snap.docs.map(d => ({id: d.id, ...d.data()}));
                         this.renderAdminList();
                     });
-                } catch (e) { console.error("Cloud Connection Error"); }
+                } catch (e) { console.error("Cloud Error"); }
             },
 
             login() {
                 const val = document.getElementById('login-id').value.trim();
-                if (val === ADMIN_PIN) { this.switch('view-admin'); this.initAdminUI(); return; }
+                if (val === ADMIN_PIN) { this.switch('view-admin'); this.refreshMonthUI(); return; }
                 const user = clients.find(c => String(c.id).toLowerCase() === val.toLowerCase());
                 if (user) { this.switch('view-user'); this.renderUser(user); }
                 else if (val) { alert("المعرف غير صحيح."); }
@@ -145,7 +145,7 @@
                 document.getElementById(id).classList.remove('hidden');
             },
 
-            initAdminUI() {
+            refreshMonthUI() {
                 const grid = document.getElementById('adm-months');
                 grid.innerHTML = "";
                 const year = document.getElementById('adm-year').value;
@@ -154,14 +154,16 @@
                     const key = `${year}-${m}`;
                     const b = document.createElement('div');
                     b.className = "m-btn"; b.innerText = m;
-                    if(selectedPaidKeys.includes(key)) b.classList.add('active');
+                    
+                    // التحقق من حالة الشهر في البيانات المخزنة مؤقتاً
+                    if(currentClientPaidData.includes(key)) b.classList.add('active');
                     
                     b.onclick = () => {
-                        if (selectedPaidKeys.includes(key)) {
-                            selectedPaidKeys = selectedPaidKeys.filter(x => x !== key);
+                        if (currentClientPaidData.includes(key)) {
+                            currentClientPaidData = currentClientPaidData.filter(x => x !== key);
                             b.classList.remove('active');
                         } else {
-                            selectedPaidKeys.push(key);
+                            currentClientPaidData.push(key);
                             b.classList.add('active');
                         }
                     };
@@ -173,56 +175,35 @@
                 const n = document.getElementById('adm-name').value.trim();
                 const i = document.getElementById('adm-id').value.trim();
                 const p = document.getElementById('adm-price').value;
-                const y = document.getElementById('adm-year').value;
                 
-                if (!n || !i || !p) return alert("المرجو إدخال جميع البيانات");
+                if (!n || !i || !p) return alert("المرجو ملء جميع الحقول");
                 
                 const btn = document.getElementById('btn-save');
                 btn.disabled = true;
                 btn.innerText = "جاري الحفظ...";
 
                 try {
-                    // 1. جلب أحدث بيانات لهذا المشترك من السحاب أولاً لتفادي تضارب البيانات
-                    const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'clients', i);
-                    const docSnap = await getDoc(docRef);
-                    
-                    let finalPaid = [];
-                    if (docSnap.exists()) {
-                        const existingPaid = docSnap.data().paid || [];
-                        // 2. تصفية الشهور: نحذف شهور السنة الحالية المختارة فقط ونضيف الاختيارات الجديدة
-                        const otherYears = existingPaid.filter(k => !k.startsWith(y + "-"));
-                        const currentYearNew = selectedPaidKeys.filter(k => k.startsWith(y + "-"));
-                        finalPaid = [...otherYears, ...currentYearNew];
-                    } else {
-                        finalPaid = selectedPaidKeys;
-                    }
-
-                    // 3. الحفظ النهائي
-                    await setDoc(docRef, {
+                    // الحفظ في الفايربيس (currentClientPaidData تحتوي الآن على كل السنوات المختارة مسبقاً)
+                    await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'clients', i), {
                         name: n,
                         price: Number(p),
-                        paid: finalPaid,
-                        lastUpdate: new Date().toISOString()
+                        paid: currentClientPaidData
                     });
 
-                    alert("تم الحفظ والمزامنة بنجاح ✅");
-                    // إعادة تصفير المدخلات
-                    document.getElementById('adm-name').value = "";
-                    document.getElementById('adm-id').value = "";
-                    selectedPaidKeys = [];
-                    this.initAdminUI();
+                    alert("تم الحفظ بنجاح!");
+                    // لا نقوم بتصفير currentClientPaidData للسماح بتعديلات أخرى لنفس الزبون إذا لزم الأمر
                 } catch (e) {
-                    alert("حدث خطأ أثناء الحفظ. تأكد من جودة الإنترنت.");
+                    alert("خطأ في الاتصال");
                 } finally {
                     btn.disabled = false;
-                    btn.innerText = "حفظ التعديلات";
+                    btn.innerText = "حفظ التعديلات النهائية";
                 }
             },
 
             renderAdminList() {
                 const list = document.getElementById('adm-list');
                 if(!list) return;
-                list.innerHTML = "<p style='font-size:11px; margin:15px'>المشتركون المسجلون:</p>";
+                list.innerHTML = "<p style='font-size:11px; margin:15px'>قائمة المشتركين:</p>";
                 clients.forEach(c => {
                     const d = document.createElement('div');
                     d.className = "client-box";
@@ -235,14 +216,15 @@
                         document.getElementById('adm-name').value = c.name;
                         document.getElementById('adm-id').value = c.id;
                         document.getElementById('adm-price').value = c.price;
-                        selectedPaidKeys = c.paid || [];
-                        this.initAdminUI();
+                        // تحميل كل بيانات الدفع للزبون
+                        currentClientPaidData = c.paid || [];
+                        this.refreshMonthUI(); // تحديث الواجهة للسنة المختارة حالياً في القائمة
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                     };
                     
                     const del = document.createElement('button');
                     del.innerText = "حذف"; del.style="color:red; border:none; background:none; font-weight:bold;";
-                    del.onclick = async () => { if(confirm("حذف الزبون نهائياً؟")) await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'clients', c.id)); };
+                    del.onclick = async () => { if(confirm("حذف؟")) await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'clients', c.id)); };
                     
                     btnGroup.append(edit, del);
                     d.appendChild(btnGroup);
@@ -253,13 +235,14 @@
             renderUser(u) {
                 document.getElementById('u-name').innerText = u.name;
                 document.getElementById('u-price').innerText = u.price;
-                document.getElementById('u-year-label').innerText = `كشف حساب سنة ${currentYear}`;
+                document.getElementById('u-year-label').innerText = `حساب عام ${currentYear}`;
                 
+                // عرض الشهور حتى تاريخ اليوم
                 const visibleMonths = monthsNames.slice(0, currentMonthIdx + 1);
                 const unpaid = visibleMonths.filter(m => !u.paid.includes(`${currentYear}-${m}`)).length;
                 document.getElementById('u-due').innerText = unpaid * u.price;
 
-                let html = `<div style="padding:10px; background:#f9f9f9; font-weight:bold; font-size:12px; text-align:center">سجل مستحقات ${currentYear}</div>`;
+                let html = `<div style="padding:10px; background:#f9f9f9; font-weight:bold; font-size:12px; text-align:center">مستحقات ${currentYear}</div>`;
                 visibleMonths.forEach(m => {
                     const ok = u.paid && u.paid.includes(`${currentYear}-${m}`);
                     html += `<div class="h-row"><span>${m}</span><span class="status ${ok?'paid':'unpaid'}">${ok?'مؤدى ✓':'غير مؤدى'}</span></div>`;
