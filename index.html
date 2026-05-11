@@ -6,94 +6,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SMART WIFI AZILAL</title>
     <style>
-        :root { --gold: #FFCC00; --dark: #000000; --bg: #f8f9fa; }
+        :root { --gold: #FFCC00; --dark: #000000; --bg: #fdfdfd; }
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: #333; overflow-x: hidden; }
+        body { margin: 0; background: var(--bg); color: #333; }
         
-        header { background: var(--dark); color: white; padding: 40px 20px; text-align: center; border-bottom: 8px solid var(--gold); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .logo-container { background: var(--gold); width: 65px; height: 65px; margin: 0 auto 15px; border-radius: 18px; display: flex; align-items: center; justify-content: center; transform: rotate(-3deg); box-shadow: 0 4px 10px rgba(255,204,0,0.3); }
-        h1 { margin: 0; font-size: 26px; font-weight: 900; font-style: italic; letter-spacing: -1px; }
-        .badge { background: var(--gold); color: black; padding: 2px 12px; font-weight: bold; border-radius: 6px; font-size: 14px; display: inline-block; margin-top: 5px; }
+        header { background: var(--dark); color: white; padding: 45px 20px; text-align: center; border-bottom: 8px solid var(--gold); position: relative; }
+        .logo-box { background: var(--gold); width: 60px; height: 60px; margin: 0 auto 15px; border-radius: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(255,204,0,0.4); }
+        h1 { margin: 0; font-size: 28px; font-weight: 900; letter-spacing: -1px; }
+        .tagline { font-size: 12px; color: var(--gold); font-weight: bold; margin-top: 5px; opacity: 0.9; }
 
-        .wrapper { padding: 20px; max-width: 420px; margin: -25px auto 0; position: relative; z-index: 10; }
-        .main-card { background: white; border-radius: 30px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); text-align: center; border: 1px solid rgba(255,255,255,0.8); }
+        .container { padding: 20px; max-width: 450px; margin: -30px auto 0; position: relative; }
+        .card { background: white; border-radius: 25px; padding: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); border: 1px solid #eee; text-align: center; }
         
-        input { width: 100%; padding: 18px; border: 2px solid #eee; border-radius: 15px; font-size: 18px; text-align: center; font-weight: bold; margin-bottom: 15px; transition: 0.3s; background: #fafafa; }
-        input:focus { border-color: var(--gold); background: white; outline: none; }
+        input { width: 100%; padding: 16px; border: 2px solid #f0f0f0; border-radius: 12px; font-size: 18px; text-align: center; font-weight: bold; margin-bottom: 15px; transition: 0.3s; }
+        input:focus { border-color: var(--gold); outline: none; background: #fffdf5; }
         
-        .primary-btn { width: 100%; padding: 18px; background: var(--dark); color: var(--gold); border: none; border-radius: 15px; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .primary-btn:active { transform: scale(0.96); }
+        .btn { width: 100%; padding: 18px; background: var(--dark); color: var(--gold); border: none; border-radius: 12px; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn:active { transform: scale(0.98); }
 
         .hidden { display: none !important; }
+        .status-bar { margin-top: 20px; font-size: 11px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; }
+        .dot { width: 8px; height: 8px; background: #ccc; border-radius: 50%; }
+        .dot.online { background: #2ecc71; box-shadow: 0 0 8px #2ecc71; }
+        .dot.retry { background: #f39c12; animation: blink 1s infinite; }
         
-        .user-box { background: #000; color: #fff; padding: 25px; border-radius: 20px; text-align: right; border-left: 10px solid var(--gold); margin-bottom: 15px; }
-        .grid-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
-        .stat-item { background: white; padding: 20px; border-radius: 20px; border: 1px solid #eee; text-align: center; }
-        
-        .list-container { background: white; border-radius: 20px; overflow: hidden; border: 1px solid #eee; text-align: right; }
-        .row { display: flex; justify-content: space-between; padding: 15px 20px; border-bottom: 1px solid #f8f8f8; font-size: 14px; font-weight: 600; }
+        @keyframes blink { 50% { opacity: 0.3; } }
 
-        .cloud-status { margin-top: 20px; font-size: 11px; color: #999; display: flex; align-items: center; justify-content: center; gap: 6px; font-weight: bold; }
-        .indicator { width: 8px; height: 8px; background: #ea4335; border-radius: 50%; transition: 0.5s; }
-        .indicator.online { background: #34a853; box-shadow: 0 0 10px #34a853; }
-
-        .m-btn { padding: 10px; border: 1.5px solid #eee; border-radius: 10px; font-size: 11px; cursor: pointer; background: #fff; color: #bbb; font-weight: bold; text-align: center; }
-        .m-btn.active { background: var(--gold); border-color: var(--gold); color: black; }
-        .client-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; }
+        /* User UI */
+        .user-header { background: #000; color: white; padding: 25px; border-radius: 20px; text-align: right; margin-bottom: 15px; border-left: 8px solid var(--gold); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .stat-card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #eee; text-align: center; }
+        .list-box { background: white; border-radius: 15px; border: 1px solid #eee; overflow: hidden; text-align: right; }
+        .list-item { display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9f9f9; font-size: 14px; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-container">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="black"/></svg>
+        <div class="logo-box">
+            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="black"/></svg>
         </div>
         <h1>SMART WIFI</h1>
-        <div class="badge">AZILAL</div>
+        <div class="tagline">AZILAL • CLOUD SYSTEM</div>
     </header>
 
-    <div class="wrapper">
-        <div id="sc-login" class="main-card">
-            <h2 style="margin:0 0 10px">بوابة الدخول</h2>
-            <p style="font-size:12px; color:#999; margin-bottom:25px">أدخل المعرف الخاص بك للمتابعة</p>
-            <input type="text" id="input-id" placeholder="أرقام أو حروف">
-            <button class="primary-btn" id="login-btn" onclick="app.login()">دخول إلى الحساب</button>
-            <div class="cloud-status">
-                <div id="cloud-ind" class="indicator"></div>
-                <span id="cloud-txt">جاري فحص الاتصال...</span>
+    <div class="container">
+        <!-- Login -->
+        <div id="view-login" class="card">
+            <h2 style="margin:0 0 5px">بوابة المشتركين</h2>
+            <p style="font-size:12px; color:#888; margin-bottom:25px">يرجى إدخال المعرف الخاص بك (أرقام أو حروف)</p>
+            
+            <input type="text" id="login-id" placeholder="المعرف (مثلاً: 06XXXXXXXX)">
+            <button class="btn" id="btn-login" onclick="app.doLogin()">دخول إلى الحساب</button>
+            
+            <div class="status-bar">
+                <div id="conn-dot" class="dot"></div>
+                <span id="conn-text">جاري تهيئة النظام...</span>
             </div>
         </div>
 
-        <div id="sc-user" class="hidden">
-            <div class="user-box">
-                <div style="font-size:10px; font-weight:bold; opacity:0.6">الاسم الكامل</div>
-                <h2 id="u-name" style="margin:0; font-style: italic;">---</h2>
+        <!-- User Profile -->
+        <div id="view-user" class="hidden">
+            <div class="user-header">
+                <small style="opacity:0.7">مرحباً بك</small>
+                <h2 id="user-name" style="margin:5px 0 0">---</h2>
             </div>
-            <div class="grid-stats">
-                <div class="stat-item">
-                    <div style="font-size:10px; color:#aaa; margin-bottom:5px">الاشتراك الشهري</div>
-                    <b id="u-price" style="font-size:22px">0 د</b>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <small style="color:#999">الاشتراك</small><br>
+                    <b id="user-price" style="font-size:20px">0 د</b>
                 </div>
-                <div class="stat-item" style="border-bottom: 5px solid #e74c3c">
-                    <div style="font-size:10px; color:#e74c3c; margin-bottom:5px">المتأخرات</div>
-                    <b id="u-due" style="font-size:22px; color:#e74c3c">0 د</b>
+                <div class="stat-card" style="border-bottom: 4px solid #e74c3c">
+                    <small style="color:#e74c3c">المتأخرات</small><br>
+                    <b id="user-due" style="font-size:20px; color:#e74c3c">0 د</b>
                 </div>
             </div>
-            <div class="list-container" id="u-list"></div>
-            <button class="primary-btn" style="margin-top:20px; background:#f0f0f0; color:#333; box-shadow:none" onclick="location.reload()">خروج</button>
+            <div class="list-box" id="user-history"></div>
+            <button class="btn" style="margin-top:20px; background:#eee; color:#333" onclick="location.reload()">تسجيل الخروج</button>
         </div>
 
-        <div id="sc-admin" class="hidden">
-            <div class="main-card" style="text-align:right; margin-bottom:15px; padding:20px; border-radius: 20px;">
-                <h3 style="margin-top:0">إدارة المشتركين</h3>
-                <input type="text" id="adm-n" placeholder="اسم الزبون" style="font-size:14px; padding:12px">
-                <input type="text" id="adm-i" placeholder="المعرف (ID)" style="font-size:14px; padding:12px">
-                <input type="number" id="adm-p" placeholder="الثمن (درهم)" style="font-size:14px; padding:12px">
-                <p style="font-size:11px; font-weight:bold; color:#666">تحديد الأشهر المؤداة:</p>
-                <div id="adm-months" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px; margin-bottom:15px"></div>
-                <button class="primary-btn" id="save-btn" onclick="app.save()">حفظ ومزامنة</button>
+        <!-- Admin -->
+        <div id="view-admin" class="hidden">
+            <div class="card" style="text-align:right; margin-bottom:15px">
+                <h3 style="margin-top:0">إضافة زبون جديد</h3>
+                <input type="text" id="adm-name" placeholder="الاسم الكامل" style="font-size:14px; padding:12px">
+                <input type="text" id="adm-id" placeholder="المعرف (ID)" style="font-size:14px; padding:12px">
+                <input type="number" id="adm-price" placeholder="ثمن الاشتراك" style="font-size:14px; padding:12px">
+                <div id="adm-months" style="display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin-bottom:15px"></div>
+                <button class="btn" onclick="app.saveClient()">حفظ في السحابة</button>
             </div>
-            <div id="adm-list"></div>
+            <div id="admin-list"></div>
         </div>
     </div>
 
@@ -102,146 +105,132 @@
         import { getFirestore, doc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // --- إعداداتك الخاصة ---
-        const ADMIN_CODE = "0602359188"; 
-        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : "smart-wifi-azilal-global";
-        // -----------------------
-
+        const ADMIN_KEY = "0602359188";
+        const APP_ID = "smart-wifi-azilal-v10";
         const months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        let clients = JSON.parse(localStorage.getItem('backup_azilal') || '[]');
-        let selectedMonths = [];
-        let db;
+
+        let db, clients = [], selectedMonths = [];
 
         const app = {
-            async start() {
+            async init(retries = 5) {
+                const dot = document.getElementById('conn-dot');
+                const txt = document.getElementById('conn-text');
+                
                 try {
-                    // التحقق من وجود الإعدادات
-                    if (typeof __firebase_config === 'undefined') throw new Error("Config Missing");
-                    
-                    const cfg = JSON.parse(__firebase_config);
-                    const fbApp = initializeApp(cfg);
-                    db = getFirestore(fbApp);
-                    const auth = getAuth(fbApp);
+                    const config = JSON.parse(__firebase_config);
+                    const firebaseApp = initializeApp(config);
+                    db = getFirestore(firebaseApp);
+                    const auth = getAuth(firebaseApp);
                     
                     await signInAnonymously(auth);
                     
-                    document.getElementById('cloud-ind').classList.add('online');
-                    document.getElementById('cloud-txt').innerText = "متصل بالسحابة ✓";
+                    dot.className = "dot online";
+                    txt.innerText = "متصل بالسحابة ✓";
 
-                    // المزامنة الحية
                     onSnapshot(collection(db, 'artifacts', APP_ID, 'public', 'data', 'clients'), (snap) => {
                         clients = snap.docs.map(d => ({id: d.id, ...d.data()}));
-                        localStorage.setItem('backup_azilal', JSON.stringify(clients));
                         this.renderAdmin();
-                    }, (err) => {
-                        console.error("Firestore Error:", err);
                     });
-
                 } catch (e) {
-                    console.error("Connection Error:", e);
-                    document.getElementById('cloud-txt').innerText = "وضع الأوفلاين (الإنترنت ضعيف)";
+                    if (retries > 0) {
+                        dot.className = "dot retry";
+                        txt.innerText = `جاري محاولة الاتصال (${retries})...`;
+                        setTimeout(() => this.init(retries - 1), 3000);
+                    } else {
+                        txt.innerText = "فشل الاتصال. يرجى تحديث الصفحة.";
+                    }
                 }
             },
 
-            login() {
-                const id = document.getElementById('input-id').value.trim();
-                if (!id) return;
+            doLogin() {
+                const val = document.getElementById('login-id').value.trim();
+                if (!val) return;
 
-                if (id === ADMIN_CODE) {
-                    document.getElementById('sc-login').classList.add('hidden');
-                    document.getElementById('sc-admin').classList.remove('hidden');
-                    this.initMonths();
-                    this.renderAdmin();
+                if (val === ADMIN_KEY) {
+                    this.show('view-admin');
+                    this.initAdminUI();
                     return;
                 }
 
-                const u = clients.find(c => c.id.toString().toLowerCase() === id.toLowerCase());
-                
+                const u = clients.find(c => c.id.toString().toLowerCase() === val.toLowerCase());
                 if (u) {
-                    document.getElementById('sc-login').classList.add('hidden');
-                    document.getElementById('sc-user').classList.remove('hidden');
-                    document.getElementById('u-name').innerText = u.name;
-                    document.getElementById('u-price').innerText = u.price + " د";
-                    const dueCount = months.length - u.paid.length;
-                    document.getElementById('u-due').innerText = (dueCount * u.price) + " د";
+                    this.show('view-user');
+                    document.getElementById('user-name').innerText = u.name;
+                    document.getElementById('user-price').innerText = u.price + " د";
+                    const unpaid = months.length - u.paid.length;
+                    document.getElementById('user-due').innerText = (unpaid * u.price) + " د";
                     
-                    let h = '<div style="padding:15px; background:#fafafa; font-weight:bold; font-size:12px; border-bottom:1px solid #eee">سجل 2026</div>';
+                    let html = '<div style="background:#fcfcfc; padding:10px; font-size:11px; border-bottom:1px solid #eee">سجل الأداء - 2026</div>';
                     months.forEach(m => {
-                        const ok = u.paid.includes(m);
-                        h += `<div class="row"><span>${m}</span><span style="color:${ok?'#2ecc71':'#e74c3c'}">${ok?'مؤدى ✓':'غير مؤدى'}</span></div>`;
+                        const isPaid = u.paid.includes(m);
+                        html += `<div class="list-item"><span>${m}</span><b style="color:${isPaid?'#2ecc71':'#e74c3c'}">${isPaid?'مؤدى ✓':'غير مؤدى'}</b></div>`;
                     });
-                    document.getElementById('u-list').innerHTML = h;
+                    document.getElementById('user-history').innerHTML = html;
                 } else {
-                    alert("المعرف غير موجود. المرجو التأكد من الكتابة.");
+                    alert("عذراً، هذا المعرف غير مسجل لدينا.");
                 }
             },
 
-            initMonths() {
-                const g = document.getElementById('adm-months');
-                g.innerHTML = "";
+            show(id) {
+                ['view-login', 'view-user', 'view-admin'].forEach(v => document.getElementById(v).classList.add('hidden'));
+                document.getElementById(id).classList.remove('hidden');
+            },
+
+            initAdminUI() {
+                const box = document.getElementById('adm-months');
+                box.innerHTML = "";
                 months.forEach(m => {
-                    const b = document.createElement('div');
-                    b.className = "m-btn"; b.innerText = m;
-                    b.onclick = () => {
+                    const d = document.createElement('div');
+                    d.style = "padding:8px; border:1px solid #eee; border-radius:8px; font-size:10px; text-align:center; cursor:pointer; background:#fff";
+                    d.innerText = m;
+                    d.onclick = () => {
                         if (selectedMonths.includes(m)) {
                             selectedMonths = selectedMonths.filter(x => x !== m);
-                            b.classList.remove('active');
+                            d.style.background = "#fff";
                         } else {
                             selectedMonths.push(m);
-                            b.classList.add('active');
+                            d.style.background = "#FFCC00";
                         }
                     };
-                    g.appendChild(b);
+                    box.appendChild(d);
                 });
             },
 
-            async save() {
-                const n = document.getElementById('adm-n').value.trim();
-                const i = document.getElementById('adm-i').value.trim();
-                const p = document.getElementById('adm-p').value || 200;
-                if (!n || !i) return alert("المرجو إدخال الاسم والمعرف");
+            async saveClient() {
+                const n = document.getElementById('adm-name').value;
+                const i = document.getElementById('adm-id').value;
+                const p = document.getElementById('adm-price').value;
+                if (!n || !i) return alert("أدخل البيانات");
 
-                const obj = { id: i, name: n, price: Number(p), paid: [...selectedMonths] };
-                
-                try {
-                    const btn = document.getElementById('save-btn');
-                    btn.disabled = true; btn.innerText = "جاري الحفظ...";
-                    
-                    await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'clients', i), obj);
-                    alert("تم الحفظ بنجاح!");
-                    location.reload();
-                } catch (e) {
-                    alert("تعذر الحفظ في السحابة. تم الحفظ محلياً.");
-                    clients.push(obj);
-                    localStorage.setItem('backup_azilal', JSON.stringify(clients));
-                }
+                await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'clients', i), {
+                    name: n, price: Number(p), paid: selectedMonths
+                });
+                alert("تم الحفظ!");
+                location.reload();
             },
 
             renderAdmin() {
-                const list = document.getElementById('adm-list');
-                if(!list) return;
-                list.innerHTML = "<p style='font-size:11px; font-weight:bold; color:#aaa; margin:20px 10px 10px'>المشتركون الحاضرون:</p>";
+                const list = document.getElementById('admin-list');
+                if (!list) return;
+                list.innerHTML = "";
                 clients.forEach(c => {
-                    const d = document.createElement('div');
-                    d.className = "client-item";
-                    d.innerHTML = `<div style="text-align:right"><b>${c.name}</b><br><small style="color:#aaa">ID: ${c.id}</small></div>`;
-                    const del = document.createElement('button');
-                    del.style = "background:#fff5f5; color:#e74c3c; border:none; padding:8px 12px; border-radius:10px; font-weight:bold; font-size:11px";
-                    del.innerText = "حذف";
-                    del.onclick = async () => {
-                        if (confirm("حذف المشترك نهائياً؟")) {
-                            await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'clients', c.id));
-                        }
-                    };
-                    d.appendChild(del);
-                    list.appendChild(d);
+                    const div = document.createElement('div');
+                    div.style = "background:white; padding:12px; border-radius:10px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; border:1px solid #eee";
+                    div.innerHTML = `<div style="text-align:right"><b>${c.name}</b><br><small>${c.id}</small></div>`;
+                    const btn = document.createElement('button');
+                    btn.innerText = "حذف";
+                    btn.style = "background:#fff1f1; color:red; border:none; padding:5px 10px; border-radius:5px";
+                    btn.onclick = async () => { if(confirm("حذف؟")) await deleteDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'clients', c.id)); };
+                    div.appendChild(btn);
+                    list.appendChild(div);
                 });
             }
         };
 
         window.app = app;
-        // تشغيل التطبيق فور تحميل الصفحة
-        window.onload = () => app.start();
+        // تشغيل فوري مع ضمان تحميل الصفحة
+        if (document.readyState === 'complete') app.init();
+        else window.addEventListener('load', () => app.init());
     </script>
 </body>
 </html>
