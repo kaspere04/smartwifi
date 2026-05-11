@@ -1,199 +1,282 @@
-hassan
+للمزيد من المعلومات اتصل بنا على : 0602359188
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SMART WIFI AZILAL</title>
+    <title>SMART WIFI AZILAL - نظام الفوترة الذكي</title>
     <style>
-        :root { --gold: #FFCC00; --dark: #111; --bg: #f4f7f6; }
+        :root { --gold: #FFCC00; --dark: #111; --bg: #f8f9fa; --red: #e74c3c; --green: #2ecc71; --gray: #888; }
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { margin: 0; background: var(--bg); color: #333; }
+        body { margin: 0; background: var(--bg); color: #333; padding-bottom: 50px; }
         
-        header { background: var(--dark); color: white; padding: 40px 20px; text-align: center; border-bottom: 6px solid var(--gold); }
-        .logo-box { background: var(--gold); width: 60px; height: 60px; margin: 0 auto 10px; border-radius: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(255,204,0,0.3); }
-        h1 { margin: 0; font-size: 24px; font-weight: 900; }
+        header { background: var(--dark); color: white; padding: 35px 20px; text-align: center; border-bottom: 6px solid var(--gold); position: relative; }
+        .logo-box { background: var(--gold); width: 50px; height: 50px; margin: 0 auto 10px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        h1 { margin: 0; font-size: 20px; letter-spacing: 1px; }
 
-        .container { padding: 20px; max-width: 420px; margin: -25px auto 0; position: relative; }
-        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center; }
+        .container { padding: 15px; max-width: 450px; margin: -20px auto 0; }
+        .card { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eee; }
         
-        input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 12px; font-size: 16px; text-align: center; font-weight: bold; margin-bottom: 15px; }
-        input:focus { border-color: var(--gold); outline: none; background: #fffdf5; }
+        input, select { width: 100%; padding: 14px; border: 1.5px solid #eee; border-radius: 12px; font-size: 16px; text-align: center; margin-bottom: 12px; background: #fff; }
+        input:focus, select:focus { border-color: var(--gold); outline: none; }
         
-        .btn-main { width: 100%; padding: 16px; background: var(--dark); color: var(--gold); border: none; border-radius: 12px; font-size: 17px; font-weight: bold; cursor: pointer; }
-        .btn-main:disabled { opacity: 0.5; }
+        .btn-main { width: 100%; padding: 16px; background: var(--dark); color: var(--gold); border: none; border-radius: 12px; font-size: 17px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-main:active { transform: scale(0.97); }
 
         .hidden { display: none !important; }
         
-        /* Status Indicator */
-        .status-footer { margin-top: 15px; font-size: 11px; color: #999; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .dot { width: 8px; height: 8px; background: #2ecc71; border-radius: 50%; box-shadow: 0 0 5px #2ecc71; }
+        /* User Profile */
+        .u-card { background: var(--dark); color: white; padding: 25px; border-radius: 20px; text-align: right; border-right: 8px solid var(--gold); margin-bottom: 15px; }
+        .u-year-badge { background: rgba(255,204,0,0.2); color: var(--gold); padding: 4px 12px; border-radius: 8px; font-size: 12px; display: inline-block; margin-top: 8px; border: 1px solid var(--gold); }
+        
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid-item { background: white; padding: 15px; border-radius: 18px; border: 1px solid #eee; text-align: center; }
+        .grid-item b { font-size: 22px; display: block; margin-top: 5px; }
 
-        /* User Dashboard */
-        .u-header { background: #000; color: #fff; padding: 20px; border-radius: 15px; text-align: right; border-left: 8px solid var(--gold); margin-bottom: 12px; }
-        .u-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-        .u-stat-box { background: white; padding: 15px; border-radius: 15px; border: 1px solid #eee; text-align: center; }
-        .u-list { background: white; border-radius: 15px; border: 1px solid #eee; overflow: hidden; text-align: right; }
-        .u-row { display: flex; justify-content: space-between; padding: 12px 15px; border-bottom: 1px solid #f9f9f9; font-size: 14px; }
+        /* History Table */
+        .h-list { background: white; border-radius: 20px; border: 1px solid #eee; margin-top: 15px; overflow: hidden; }
+        .h-row { display: flex; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid #f8f8f8; font-size: 14px; align-items: center; }
+        .h-row:last-child { border-bottom: none; }
+        .status { padding: 5px 12px; border-radius: 10px; font-size: 11px; font-weight: bold; }
+        .paid { background: #e8f5e9; color: var(--green); }
+        .unpaid { background: #ffebee; color: var(--red); }
 
-        /* Admin UI */
-        .month-btn { padding: 8px; border: 1px solid #eee; border-radius: 8px; font-size: 11px; cursor: pointer; background: #fff; text-align: center; }
-        .month-btn.selected { background: var(--gold); border-color: var(--gold); font-weight: bold; }
-        .client-card { background: white; padding: 12px; border-radius: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; }
+        /* Month Picker */
+        .m-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0; }
+        .m-btn { padding: 10px; border: 1.5px solid #f0f0f0; border-radius: 10px; font-size: 11px; cursor: pointer; background: #fff; color: #aaa; text-align: center; transition: 0.2s; }
+        .m-btn.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: bold; }
+
+        .client-box { background: white; padding: 12px 18px; border-radius: 15px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo-box">
-            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="black"/></svg>
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="black"/></svg>
         </div>
-        <h1>SMART WIFI</h1>
-        <div style="font-size: 10px; color: var(--gold); font-weight: bold; letter-spacing: 2px;">AZILAL PRO</div>
+        <h1>SMART WIFI AZILAL</h1>
     </header>
 
     <div class="container">
-        <!-- Login -->
+        <!-- View: Login -->
         <div id="view-login" class="card">
-            <h3 style="margin:0 0 10px">تسجيل الدخول</h3>
-            <input type="text" id="input-id" placeholder="أدخل المعرف الخاص بك">
-            <button class="btn-main" onclick="sys.login()">دخول</button>
-            <div class="status-footer"><div class="dot"></div> النظام متصل وآمن</div>
+            <h3 style="margin-top:0">بوابة الزبناء</h3>
+            <p style="font-size:12px; color:var(--gray)">أدخل المعرف الخاص بك لمعاينة الفواتير</p>
+            <input type="text" id="login-id" placeholder="ID المشترك">
+            <button class="btn-main" onclick="app.login()">تسجيل الدخول</button>
+            <p id="curr-date" style="font-size:10px; color:#ccc; margin-top:15px"></p>
         </div>
 
-        <!-- Subscriber Dashboard -->
+        <!-- View: Subscriber -->
         <div id="view-user" class="hidden">
-            <div class="u-header">
-                <small style="opacity:0.7">المشترك:</small>
-                <h3 id="display-name" style="margin:5px 0 0">---</h3>
+            <div class="u-card">
+                <div style="font-size:12px; opacity:0.7">مرحباً بك:</div>
+                <h2 id="u-name" style="margin:5px 0">---</h2>
+                <div id="u-year-label" class="u-year-badge">السنة: ---</div>
             </div>
-            <div class="u-stats">
-                <div class="u-stat-box">
-                    <small style="color:#999">الاشتراك</small><br>
-                    <b id="display-price">0</b> <small>درهم</small>
+
+            <div class="grid">
+                <div class="grid-item">
+                    <small style="color:var(--gray)">الواجب الشهري</small>
+                    <b id="u-price">0</b><small>درهم</small>
                 </div>
-                <div class="u-stat-box" style="border-bottom: 4px solid #e74c3c">
-                    <small style="color:#e74c3c">المتأخرات</small><br>
-                    <b id="display-due" style="color:#e74c3c">0</b> <small>درهم</small>
+                <div class="grid-item" style="border-bottom: 4px solid var(--red)">
+                    <small style="color:var(--red)">الباقي بذمتكم</small>
+                    <b id="u-due" style="color:var(--red)">0</b><small>درهم</small>
                 </div>
             </div>
-            <div class="u-list" id="display-history"></div>
-            <button class="btn-main" style="margin-top:15px; background:#f0f0f0; color:#333" onclick="location.reload()">خروج</button>
+
+            <div class="h-list" id="u-history"></div>
+            
+            <button class="btn-main" style="margin-top:20px; background:#eee; color:#333; box-shadow:none" onclick="location.reload()">تسجيل الخروج</button>
         </div>
 
-        <!-- Admin Dashboard -->
+        <!-- View: Admin -->
         <div id="view-admin" class="hidden">
-            <div class="card" style="text-align:right; margin-bottom:15px">
-                <h4 style="margin:0 0 10px">إضافة/تعديل مشترك</h4>
+            <div class="card" style="text-align:right">
+                <h3 style="margin-top:0">إضافة / تعديل زبون</h3>
+                
                 <input type="text" id="adm-name" placeholder="الاسم الكامل">
-                <input type="text" id="adm-id" placeholder="المعرف (ID)">
-                <input type="number" id="adm-price" placeholder="الثمن">
-                <div id="months-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin-bottom:15px"></div>
-                <button class="btn-main" id="save-btn" onclick="sys.save()">حفظ التغييرات</button>
+                <input type="text" id="adm-id" placeholder="ID (رقم الهاتف أو كود)">
+                <input type="number" id="adm-price" placeholder="ثمن الاشتراك الشهري">
+                
+                <label style="font-size:12px; font-weight:bold;">اختر سنة الفوترة:</label>
+                <select id="adm-year"></select>
+
+                <label style="font-size:12px; font-weight:bold;">تحديد الشهور المؤداة:</label>
+                <div class="m-grid" id="adm-months"></div>
+                
+                <button class="btn-main" onclick="app.save()">حفظ البيانات سحابياً</button>
             </div>
-            <div id="admin-clients-list"></div>
+
+            <div id="adm-list"></div>
         </div>
     </div>
 
-    <script>
-        // --- نظام التخزين العالمي (يعمل على GitHub بدون تعقيدات) ---
-        const MASTER_ID = "0602359188";
-        const STORAGE_URL = "https://api.jsonbin.io/v3/b/65f1a3f61f5677401f3db98a"; // مستودع تخزين تجريبي
-        const API_KEY = "$2a$10$wE9mN5.yNlV.Y8L.M3Z4e.O1Vl.vK7m8m8m8m8m8m8m8m8m"; // مفتاح وهمي للتوضيح
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        const ADMIN_PIN = "0602359188";
+        const DB_COLLECTION = "wifi_azilal_v3";
+        const monthsNames = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
         
-        // سنعتمد على التخزين السحابي المحاكي لضمان اشتغاله عندك الآن
-        const months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        let clients = JSON.parse(localStorage.getItem('azilal_cloud_data') || '[]');
-        let selectedMonths = [];
+        const now = new Date();
+        const currentMonthIdx = now.getMonth(); // 0-11
+        const currentYear = now.getFullYear();
 
-        const sys = {
+        let db, clients = [], selectedPaid = [];
+
+        const app = {
+            async init() {
+                document.getElementById('curr-date').innerText = `التاريخ الحالي: ${monthsNames[currentMonthIdx]} ${currentYear}`;
+                
+                // ملء السنوات من 2023 إلى 2030
+                const yrSelect = document.getElementById('adm-year');
+                for(let y=2023; y<=2030; y++) {
+                    const opt = document.createElement('option');
+                    opt.value = y; opt.innerText = y;
+                    if(y === currentYear) opt.selected = true;
+                    yrSelect.appendChild(opt);
+                }
+
+                try {
+                    const config = JSON.parse(__firebase_config);
+                    const firebaseApp = initializeApp(config);
+                    db = getFirestore(firebaseApp);
+                    const auth = getAuth(firebaseApp);
+                    await signInAnonymously(auth);
+
+                    onSnapshot(collection(db, 'artifacts', DB_COLLECTION, 'public', 'data', 'clients'), (snap) => {
+                        clients = snap.docs.map(d => ({id: d.id, ...d.data()}));
+                        this.renderAdminList();
+                    });
+                } catch (e) { console.error("Firebase Connection Failed"); }
+            },
+
             login() {
-                const id = document.getElementById('input-id').value.trim();
-                if (!id) return;
+                const val = document.getElementById('login-id').value.trim();
+                if (!val) return;
 
-                if (id === MASTER_ID) {
-                    this.show('view-admin');
-                    this.initAdmin();
+                if (val === ADMIN_PIN) {
+                    this.switch('view-admin');
+                    this.initAdminMonths();
                     return;
                 }
 
-                const u = clients.find(c => String(c.id).toLowerCase() === id.toLowerCase());
-                if (u) {
-                    this.show('view-user');
-                    document.getElementById('display-name').innerText = u.name;
-                    document.getElementById('display-price').innerText = u.price;
-                    const due = (months.length - u.paid.length) * u.price;
-                    document.getElementById('display-due').innerText = due;
-                    
-                    let html = '<div style="padding:10px; background:#fcfcfc; font-weight:bold; font-size:12px; border-bottom:1px solid #eee">وضعية 2026</div>';
-                    months.forEach(m => {
-                        const ok = u.paid.includes(m);
-                        html += `<div class="u-row"><span>${m}</span><b style="color:${ok?'#2ecc71':'#e74c3c'}">${ok?'مؤدى ✓':'غير مؤدى'}</b></div>`;
-                    });
-                    document.getElementById('display-history').innerHTML = html;
+                const user = clients.find(c => String(c.id).toLowerCase() === val.toLowerCase());
+                if (user) {
+                    this.switch('view-user');
+                    this.renderUser(user);
                 } else {
-                    alert("المعرف غير موجود.");
+                    alert("المعرف غير صحيح أو غير مسجل.");
                 }
             },
 
-            show(viewId) {
+            switch(id) {
                 ['view-login', 'view-user', 'view-admin'].forEach(v => document.getElementById(v).classList.add('hidden'));
-                document.getElementById(viewId).classList.remove('hidden');
+                document.getElementById(id).classList.remove('hidden');
             },
 
-            initAdmin() {
-                const grid = document.getElementById('months-grid');
+            initAdminMonths() {
+                const grid = document.getElementById('adm-months');
                 grid.innerHTML = "";
-                months.forEach(m => {
+                monthsNames.forEach(m => {
                     const b = document.createElement('div');
-                    b.className = "month-btn"; b.innerText = m;
+                    b.className = "m-btn"; b.innerText = m;
                     b.onclick = () => {
-                        if (selectedMonths.includes(m)) {
-                            selectedMonths = selectedMonths.filter(x => x !== m);
-                            b.classList.remove('selected');
+                        if (selectedPaid.includes(m)) {
+                            selectedPaid = selectedPaid.filter(x => x !== m);
+                            b.classList.remove('active');
                         } else {
-                            selectedMonths.push(m);
-                            b.classList.add('selected');
+                            selectedPaid.push(m);
+                            b.classList.add('active');
                         }
                     };
                     grid.appendChild(b);
                 });
-                this.renderList();
             },
 
-            save() {
+            async save() {
                 const n = document.getElementById('adm-name').value;
                 const i = document.getElementById('adm-id').value;
                 const p = document.getElementById('adm-price').value;
-                if (!n || !i) return alert("أدخل البيانات");
+                const y = document.getElementById('adm-year').value;
+                
+                if (!n || !i || !p) return alert("المرجو ملء جميع البيانات");
 
-                const obj = { id: i, name: n, price: Number(p), paid: [...selectedMonths] };
-                const idx = clients.findIndex(c => c.id === i);
-                if (idx > -1) clients[idx] = obj; else clients.push(obj);
-
-                // حفظ البيانات بشكل يجعلها تظهر عند الجميع (محاكاة السحابة عبر GitHub)
-                localStorage.setItem('azilal_cloud_data', JSON.stringify(clients));
-                alert("تم حفظ البيانات بنجاح!");
-                this.renderList();
+                try {
+                    await setDoc(doc(db, 'artifacts', DB_COLLECTION, 'public', 'data', 'clients', i), {
+                        name: n, price: Number(p), year: Number(y), paid: selectedPaid
+                    });
+                    alert("تم الحفظ بنجاح");
+                    location.reload();
+                } catch (e) { alert("فشل الحفظ"); }
             },
 
-            renderList() {
-                const container = document.getElementById('admin-clients-list');
-                container.innerHTML = "<p style='font-size:11px; margin:15px 5px 5px; color:#aaa'>المشتركون الحاليون:</p>";
+            renderAdminList() {
+                const list = document.getElementById('adm-list');
+                if(!list) return;
+                list.innerHTML = "<p style='font-size:11px; color:#aaa; margin:15px 5px 5px'>المشتركون النشطون:</p>";
                 clients.forEach(c => {
                     const d = document.createElement('div');
-                    d.className = "client-card";
-                    d.innerHTML = `<div style="text-align:right"><b>${c.name}</b><br><small>ID: ${c.id}</small></div>`;
-                    const btn = document.createElement('button');
-                    btn.innerText = "حذف"; btn.style = "color:red; border:none; background:none; cursor:pointer";
-                    btn.onclick = () => { if(confirm("حذف؟")){ clients = clients.filter(x=>x.id !== c.id); localStorage.setItem('azilal_cloud_data', JSON.stringify(clients)); this.renderList(); } };
-                    d.appendChild(btn);
-                    container.appendChild(d);
+                    d.className = "client-box";
+                    d.innerHTML = `<div><b>${c.name}</b><br><small style="color:#aaa">${c.id} (${c.year})</small></div>`;
+                    const del = document.createElement('button');
+                    del.innerText = "حذف"; del.style = "color:red; border:none; background:none; font-weight:bold; cursor:pointer";
+                    del.onclick = async () => { if(confirm("هل أنت متأكد من الحذف؟")) await deleteDoc(doc(db, 'artifacts', DB_COLLECTION, 'public', 'data', 'clients', c.id)); };
+                    d.appendChild(del);
+                    list.appendChild(d);
                 });
+            },
+
+            renderUser(u) {
+                document.getElementById('u-name').innerText = u.name;
+                document.getElementById('u-price').innerText = u.price;
+                document.getElementById('u-year-label').innerText = `سنة الفوترة: ${u.year}`;
+                
+                let visibleMonths = [];
+                // تحديد الشهور التي يجب أن تظهر:
+                if (u.year < currentYear) {
+                    // إذا كانت سنة قديمة، تظهر كل الشهور (12 شهر)
+                    visibleMonths = monthsNames;
+                } else if (u.year === currentYear) {
+                    // إذا كانت السنة الحالية، تظهر الشهور حتى الشهر الحالي فقط
+                    visibleMonths = monthsNames.slice(0, currentMonthIdx + 1);
+                } else {
+                    // إذا كانت سنة مستقبلية، لا يظهر شيء أو تظهر قائمة فارغة
+                    visibleMonths = [];
+                }
+
+                // حساب الباقي بناءً على الشهور الظاهرة فقط
+                const unpaidCount = visibleMonths.filter(m => !u.paid.includes(m)).length;
+                document.getElementById('u-due').innerText = unpaidCount * u.price;
+
+                let html = `<div style="padding:12px; background:#fcfcfc; font-weight:bold; font-size:12px; border-bottom:1px solid #eee; text-align:center">
+                                كشف الحساب لغاية ${monthsNames[currentMonthIdx]} ${currentYear}
+                            </div>`;
+                
+                if (visibleMonths.length === 0 && u.year > currentYear) {
+                    html += `<div style="padding:30px; text-align:center; color:#ccc; font-size:13px">لا توجد مستحقات مطلوبة لهذه السنة بعد.</div>`;
+                } else {
+                    visibleMonths.forEach(m => {
+                        const ok = u.paid.includes(m);
+                        html += `
+                            <div class="h-row">
+                                <span>${m}</span>
+                                <span class="status ${ok?'paid':'unpaid'}">${ok?'مؤدى ✓':'غير مؤدى'}</span>
+                            </div>
+                        `;
+                    });
+                }
+                document.getElementById('u-history').innerHTML = html;
             }
         };
 
-        window.sys = sys;
+        window.app = app;
+        window.onload = () => app.init();
     </script>
 </body>
 </html>
