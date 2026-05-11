@@ -1,334 +1,107 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SMART WIFI AZILAL - النسخة المستقرة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMART WIFI AZILAL</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
-        * { font-family: 'Tajawal', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: #f1f5f9; }
+        * { font-family: 'Tajawal', sans-serif; }
         .hidden { display: none !important; }
-        .active-tab { background: #0f172a !important; color: #fbbf24 !important; border-color: #fbbf24 !important; }
-        
-        /* تصميم زر الشهور */
-        .month-btn { transition: all 0.2s; border: 2px solid transparent; }
-        .month-paid { background: #10b981 !important; color: white !important; border-color: #059669 !important; }
-        .month-unpaid { background: #fee2e2 !important; color: #ef4444 !important; border-color: #fecaca !important; }
     </style>
 </head>
-<body class="pb-10">
+<body class="bg-slate-50 pb-10">
 
-    <!-- Header -->
-    <header class="bg-slate-900 text-white p-5 shadow-xl border-b-4 border-yellow-400 sticky top-0 z-50 flex justify-between items-center">
-        <div>
-            <h1 class="font-black italic tracking-tighter text-xl">SMART WIFI <span class="text-yellow-400">AZILAL</span></h1>
-            <p class="text-[8px] text-slate-400 tracking-widest uppercase">نظام إدارة المشتركين المحلي</p>
-        </div>
-        <div class="flex gap-2">
-             <button onclick="app.exportData()" class="bg-slate-800 p-2 rounded-lg text-yellow-400 text-[10px] font-bold">نسخ احتياطي</button>
-             <button onclick="location.reload()" class="bg-slate-800 p-2 rounded-lg text-white">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-             </button>
-        </div>
+    <header class="bg-slate-900 text-white p-6 shadow-xl border-b-4 border-yellow-400 text-center">
+        <h1 class="font-black text-2xl tracking-tighter">SMART WIFI <span class="text-yellow-400">AZILAL</span></h1>
     </header>
 
-    <main class="max-w-md mx-auto p-4">
-        
-        <!-- Login Section -->
-        <section id="v-login" class="mt-10 bg-white rounded-[2.5rem] p-8 shadow-2xl border border-slate-200">
-            <div class="text-center mb-8">
-                <div class="w-16 h-16 bg-yellow-400 rounded-2xl mx-auto mb-4 flex items-center justify-center shadow-lg">
-                    <svg class="w-8 h-8 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path></svg>
-                </div>
-                <h2 class="text-2xl font-black text-slate-800">مرحباً بك</h2>
-                <p class="text-slate-400 text-sm">أدخل رقم التعريف الخاص بك</p>
-            </div>
-            
-            <input type="tel" id="login-id" class="w-full p-5 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center text-2xl font-black mb-4 focus:border-yellow-400 outline-none transition-all" placeholder="06XXXXXXXX">
-            <button onclick="app.handleLogin()" class="w-full bg-slate-900 text-yellow-400 font-black py-5 rounded-2xl shadow-xl active:scale-95 transition-all">دخول النظام</button>
-            
-            <div id="import-zone" class="mt-8 pt-6 border-t border-dashed border-slate-200">
-                <p class="text-[10px] text-center text-slate-400 mb-2">استيراد بيانات سابقة؟</p>
-                <input type="text" id="import-json" class="w-full p-2 text-[8px] bg-slate-50 border rounded-lg mb-2" placeholder="الصق الكود هنا...">
-                <button onclick="app.importData()" class="w-full py-2 bg-slate-100 text-slate-600 rounded-lg text-[10px] font-bold">تحديث القاعدة</button>
-            </div>
-        </section>
+    <div class="max-w-md mx-auto p-4 mt-6">
+        <div id="v-login" class="bg-white p-8 rounded-3xl shadow-lg text-center border border-slate-200">
+            <h2 class="text-xl font-bold mb-6 text-slate-800">تسجيل الدخول</h2>
+            <input type="tel" id="login-id" class="w-full p-4 bg-slate-50 border rounded-2xl text-center text-xl font-bold mb-4 outline-none focus:border-yellow-400" placeholder="رقم الهاتف">
+            <button onclick="login()" class="w-full bg-slate-900 text-yellow-400 font-bold py-4 rounded-2xl shadow-lg active:scale-95 transition-all">دخول</button>
+        </div>
 
-        <!-- Admin Section -->
-        <section id="v-admin" class="hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 shadow-lg border border-slate-200">
-                <h3 class="font-black text-slate-800 mb-4 flex justify-between">
-                    <span>إضافة مشترك</span>
-                    <span id="client-count" class="bg-yellow-400 text-[10px] px-2 py-1 rounded-full">0 مشترك</span>
-                </h3>
-                <div class="space-y-3">
-                    <input type="text" id="adm-name" class="w-full p-4 bg-slate-50 border rounded-xl font-bold" placeholder="اسم الزبون">
-                    <input type="tel" id="adm-id" class="w-full p-4 bg-slate-50 border rounded-xl font-bold" placeholder="رقم الهاتف">
-                    <input type="number" id="adm-price" class="w-full p-4 bg-slate-50 border rounded-xl font-bold" placeholder="الثمن (DH)">
-                    
-                    <div class="bg-slate-50 p-4 rounded-2xl border">
-                        <div class="flex justify-between items-center mb-4">
-                            <label class="text-xs font-black">جدول الدفع:</label>
-                            <select id="adm-year" onchange="app.renderMonthGrid()" class="bg-white border rounded px-2 py-1 text-xs font-bold"></select>
-                        </div>
-                        <div id="month-grid" class="grid grid-cols-3 gap-2"></div>
-                    </div>
-
-                    <button id="save-btn" onclick="app.saveClient()" class="w-full bg-slate-900 text-yellow-400 font-black py-4 rounded-2xl shadow-lg">حفظ في الذاكرة</button>
-                    <button onclick="app.resetForm()" class="w-full py-2 text-slate-400 text-[10px] font-bold uppercase">إلغاء وتصفير ✕</button>
-                </div>
+        <div id="v-admin" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-3xl shadow-md">
+                <h3 class="font-bold mb-4">إضافة زبون جديد</h3>
+                <input type="text" id="a-name" class="w-full p-3 mb-2 bg-slate-50 border rounded-xl" placeholder="الاسم">
+                <input type="tel" id="a-id" class="w-full p-3 mb-2 bg-slate-50 border rounded-xl" placeholder="رقم الهاتف">
+                <input type="number" id="a-price" class="w-full p-3 mb-4 bg-slate-50 border rounded-xl" placeholder="الثمن">
+                <button onclick="save()" class="w-full bg-slate-900 text-yellow-400 py-3 rounded-xl font-bold">حفظ</button>
             </div>
+            <div id="admin-list" class="space-y-2"></div>
+            <button onclick="exportData()" class="w-full text-xs text-slate-400 py-4">نسخ احتياطي للبيانات</button>
+        </div>
 
-            <div id="admin-list" class="space-y-2">
-                <!-- قائمة المشتركين تظهر هنا -->
+        <div id="v-client" class="hidden bg-white p-8 rounded-3xl shadow-lg border border-slate-100">
+            <h2 id="c-name" class="text-2xl font-black text-center mb-4 text-slate-800">--</h2>
+            <div class="bg-slate-900 text-white p-6 rounded-2xl text-center mb-6 border-b-4 border-yellow-400">
+                <p class="text-xs text-yellow-400 uppercase font-bold mb-1">الرصيد المطلوب</p>
+                <div class="text-4xl font-black"><span id="c-due">0</span> DH</div>
             </div>
-        </section>
-
-        <!-- Client View Section -->
-        <section id="v-client" class="hidden space-y-6">
-            <div class="bg-slate-900 text-white p-8 rounded-[3rem] shadow-2xl text-center relative overflow-hidden border-b-8 border-yellow-400">
-                <div class="relative z-10">
-                    <h2 id="c-display-name" class="text-3xl font-black mb-4">--</h2>
-                    <div class="bg-white/10 backdrop-blur-md p-6 rounded-[2rem] inline-block min-w-[200px]">
-                        <p class="text-[10px] text-yellow-400 font-black uppercase tracking-widest mb-1">المجموع المطلوب أداؤه</p>
-                        <div class="text-5xl font-black tracking-tighter"><span id="c-due">0</span><small class="text-sm ml-2">DH</small></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="c-details" class="space-y-4">
-                <!-- تفاصيل الشهور تظهر هنا -->
-            </div>
-            
-            <button onclick="location.reload()" class="w-full py-4 bg-slate-200 text-slate-600 font-bold rounded-2xl">خروج</button>
-        </section>
-
-    </main>
+            <button onclick="location.reload()" class="w-full py-3 bg-slate-100 rounded-xl font-bold text-slate-500">خروج</button>
+        </div>
+    </div>
 
     <script>
         const ADMIN_PIN = "0602359188";
-        const MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        const YEARS = [2024, 2025, 2026];
-        
-        let clients = JSON.parse(localStorage.getItem('azilal_wifi_db')) || [];
-        let editingPayments = {}; // { 2025: ["يناير", ...], ... }
+        let clients = JSON.parse(localStorage.getItem('wifi_db')) || [];
 
-        const app = {
-            init: () => {
-                const yearSel = document.getElementById('adm-year');
-                YEARS.forEach(y => {
-                    const opt = document.createElement('option');
-                    opt.value = y; opt.innerText = y;
-                    if(y === new Date().getFullYear()) opt.selected = true;
-                    yearSel.appendChild(opt);
-                });
-                app.renderMonthGrid();
-                app.updateList();
-            },
-
-            handleLogin: () => {
-                const id = document.getElementById('login-id').value.trim();
-                if(!id) return;
-
-                if(id === ADMIN_PIN) {
-                    app.show('v-admin');
-                } else {
-                    const user = clients.find(c => c.id === id);
-                    if(user) {
-                        app.renderUserPortal(user);
-                        app.show('v-client');
-                    } else {
-                        alert("عذراً، هذا المعرف غير مسجل.");
-                    }
-                }
-            },
-
-            renderMonthGrid: () => {
-                const yr = document.getElementById('adm-year').value;
-                const grid = document.getElementById('month-grid');
-                grid.innerHTML = '';
-                
-                if(!editingPayments[yr]) editingPayments[yr] = [];
-
-                MONTHS.forEach(m => {
-                    const isPaid = editingPayments[yr].includes(m);
-                    const btn = document.createElement('button');
-                    btn.className = `p-2 rounded-lg text-[10px] font-bold border-2 transition-all ${isPaid ? 'bg-emerald-500 border-emerald-600 text-white' : 'bg-white border-slate-200 text-slate-400'}`;
-                    btn.innerText = m;
-                    btn.onclick = () => {
-                        if(editingPayments[yr].includes(m)) {
-                            editingPayments[yr] = editingPayments[yr].filter(x => x !== m);
-                        } else {
-                            editingPayments[yr].push(m);
-                        }
-                        app.renderMonthGrid();
-                    };
-                    grid.appendChild(btn);
-                });
-            },
-
-            saveClient: () => {
-                const name = document.getElementById('adm-name').value.trim();
-                const id = document.getElementById('adm-id').value.trim();
-                const price = document.getElementById('adm-price').value.trim();
-
-                if(!name || !id || !price) return alert("يرجى ملء كافة الخانات!");
-
-                // تحديث أو إضافة
-                const index = clients.findIndex(c => c.id === id);
-                const clientData = {
-                    name, id, price: Number(price),
-                    payments: editingPayments,
-                    lastUpdate: Date.now()
-                };
-
-                if(index > -1) clients[index] = clientData;
-                else clients.push(clientData);
-
-                app.persist();
-                alert("تم حفظ البيانات بنجاح في ذاكرة الهاتف ✅");
-                app.resetForm();
-                app.updateList();
-            },
-
-            updateList: () => {
-                const list = document.getElementById('admin-list');
-                document.getElementById('client-count').innerText = `${clients.length} مشترك`;
-                list.innerHTML = clients.map(c => `
-                    <div onclick="app.edit('${c.id}')" class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-slate-100 active:scale-95 transition-all">
-                        <div>
-                            <div class="font-black text-slate-800">${c.name}</div>
-                            <div class="text-[10px] text-slate-400 font-bold">${c.id} • ${c.price} DH</div>
-                        </div>
-                        <div class="flex gap-2">
-                            <button onclick="event.stopPropagation(); app.delete('${c.id}')" class="p-2 text-red-400 bg-red-50 rounded-xl">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                            </button>
-                        </div>
-                    </div>
-                `).join('');
-            },
-
-            edit: (id) => {
-                const c = clients.find(x => x.id === id);
-                document.getElementById('adm-name').value = c.name;
-                document.getElementById('adm-id').value = c.id;
-                document.getElementById('adm-price').value = c.price;
-                editingPayments = JSON.parse(JSON.stringify(c.payments || {}));
-                app.renderMonthGrid();
-                window.scrollTo({top: 0, behavior: 'smooth'});
-            },
-
-            delete: (id) => {
-                if(confirm("هل أنت متأكد من حذف هذا المشترك نهائياً؟")) {
-                    clients = clients.filter(c => c.id !== id);
-                    app.persist();
-                    app.updateList();
-                }
-            },
-
-            renderUserPortal: (u) => {
-                document.getElementById('c-display-name').innerText = u.name;
-                const details = document.getElementById('c-details');
-                details.innerHTML = '';
-                
-                let totalDue = 0;
-                const now = new Date();
-                const curY = now.getFullYear();
-                const curMIdx = now.getMonth();
-
-                YEARS.filter(y => y <= curY).reverse().forEach(y => {
-                    const paidMonths = u.payments[y] || [];
-                    const limit = (y < curY) ? 11 : curMIdx;
-                    
-                    let yearUnpaidCount = 0;
-                    let monthsHtml = '';
-
-                    for(let i=0; i<=limit; i++) {
-                        const m = MONTHS[i];
-                        const isPaid = paidMonths.includes(m);
-                        if(!isPaid) yearUnpaidCount++;
-                        
-                        monthsHtml += `
-                            <div class="flex flex-col items-center p-2 rounded-xl ${isPaid ? 'bg-emerald-50 text-emerald-600' : 'bg-red-50 text-red-500 font-bold'}">
-                                <span class="text-[8px] uppercase">${m}</span>
-                                <span class="text-xs">${isPaid ? '✓' : '✕'}</span>
-                            </div>
-                        `;
-                    }
-
-                    totalDue += (yearUnpaidCount * u.price);
-
-                    const card = document.createElement('div');
-                    card.className = "bg-white p-6 rounded-3xl shadow-sm border border-slate-100";
-                    card.innerHTML = `
-                        <div class="flex justify-between items-center mb-4">
-                            <h4 class="font-black text-slate-800">${y}</h4>
-                            <span class="text-xs font-bold px-2 py-1 rounded-lg ${yearUnpaidCount > 0 ? 'bg-red-100 text-red-600' : 'bg-emerald-100 text-emerald-600'}">
-                                ${yearUnpaidCount > 0 ? 'مطلوب: ' + (yearUnpaidCount * u.price) + ' DH' : 'مستخلص بالكامل ✓'}
-                            </span>
-                        </div>
-                        <div class="grid grid-cols-4 gap-2">
-                            ${monthsHtml}
-                        </div>
-                    `;
-                    details.appendChild(card);
-                });
-
-                document.getElementById('c-due').innerText = totalDue;
-            },
-
-            persist: () => {
-                localStorage.setItem('azilal_wifi_db', JSON.stringify(clients));
-            },
-
-            show: (id) => {
-                ['v-login', 'v-admin', 'v-client'].forEach(v => document.getElementById(v).classList.add('hidden'));
-                document.getElementById(id).classList.remove('hidden');
-            },
-
-            resetForm: () => {
-                document.getElementById('adm-name').value = '';
-                document.getElementById('adm-id').value = '';
-                document.getElementById('adm-price').value = '';
-                editingPayments = {};
-                app.renderMonthGrid();
-            },
-
-            exportData: () => {
-                const data = JSON.stringify(clients);
-                const textArea = document.createElement('textarea');
-                textArea.value = data;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                alert("تم نسخ قاعدة البيانات ككود! \n\n قم بحفظ هذا الكود في (Notes) بهاتفك لتستعيده إذا قمت بفرمتة الهاتف.");
-            },
-
-            importData: () => {
-                const json = document.getElementById('import-json').value;
-                try {
-                    const parsed = JSON.parse(json);
-                    if(Array.isArray(parsed)) {
-                        clients = parsed;
-                        app.persist();
-                        alert("تم استيراد البيانات بنجاح! سيتم تحديث القائمة.");
-                        app.updateList();
-                        document.getElementById('import-json').value = '';
-                    }
-                } catch(e) {
-                    alert("الكود غير صحيح!");
-                }
+        function login() {
+            const val = document.getElementById('login-id').value.trim();
+            if(val === ADMIN_PIN) {
+                show('v-admin');
+                renderList();
+            } else {
+                const u = clients.find(x => x.id === val);
+                if(u) {
+                    document.getElementById('c-name').innerText = u.name;
+                    document.getElementById('c-due').innerText = u.price;
+                    show('v-client');
+                } else { alert("غير مسجل!"); }
             }
-        };
+        }
 
-        app.init();
+        function save() {
+            const n = document.getElementById('a-name').value;
+            const id = document.getElementById('a-id').value;
+            const p = document.getElementById('a-price').value;
+            if(!n || !id || !p) return;
+            clients.push({name: n, id: id, price: p});
+            localStorage.setItem('wifi_db', JSON.stringify(clients));
+            alert("تم الحفظ!");
+            renderList();
+        }
+
+        function renderList() {
+            const list = document.getElementById('admin-list');
+            list.innerHTML = clients.map(c => `
+                <div class="bg-white p-4 rounded-2xl flex justify-between border">
+                    <span><b>${c.name}</b> (${c.id})</span>
+                    <button onclick="del('${c.id}')" class="text-red-500 text-xs">حذف</button>
+                </div>
+            `).join('');
+        }
+
+        function del(id) {
+            clients = clients.filter(x => x.id !== id);
+            localStorage.setItem('wifi_db', JSON.stringify(clients));
+            renderList();
+        }
+
+        function show(id) {
+            ['v-login', 'v-admin', 'v-client'].forEach(v => document.getElementById(v).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function exportData() {
+            const data = JSON.stringify(clients);
+            navigator.clipboard.writeText(data);
+            alert("تم نسخ البيانات! احفظها في مذكراتك.");
+        }
     </script>
 </body>
 </html>
-
-```
