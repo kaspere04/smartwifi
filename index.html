@@ -1,254 +1,232 @@
-
+```html55555
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Smart WIFI Azilal</title>
-    <!-- تحميل المكتبات مع التأكد من المصدر -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background-color: #f3f4f6; }
-        .month-btn { transition: all 0.2s; border: 2px solid #e5e7eb; }
-        .month-btn.active { background-color: #fbbf24; border-color: #1f2937; font-weight: bold; }
-        .loader { border-top-color: #fbbf24; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* تضمين التصميم داخلياً لضمان العمل بدون إنترنت */
+        :root { --gold: #FFCC00; --dark: #111827; --gray: #F3F4F6; }
+        * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+        body { margin: 0; background-color: var(--gray); color: #374151; }
+        
+        header { background: var(--dark); color: white; padding: 20px; text-align: center; border-bottom: 4px solid var(--gold); shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .container { padding: 15px; max-width: 450px; margin: 0 auto; }
+        
+        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #E5E7EB; }
+        input { width: 100%; padding: 15px; border: 2px solid #E5E7EB; border-radius: 12px; font-size: 16px; margin-bottom: 15px; text-align: center; outline: none; }
+        input:focus { border-color: var(--gold); }
+        
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-dark { background: var(--dark); color: var(--gold); }
+        .btn-ghost { background: #E5E7EB; color: #4B5563; margin-top: 10px; }
+        
+        .month-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 15px 0; }
+        .month-item { padding: 10px 5px; border: 1px solid #E5E7EB; border-radius: 8px; text-align: center; font-size: 12px; cursor: pointer; background: #F9FAFB; }
+        .month-item.active { background: var(--gold); border-color: var(--dark); font-weight: bold; }
+
+        .client-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; background: white; border-radius: 12px; margin-bottom: 8px; border-right: 4px solid #D1D5DB; }
+        .client-item.paid { border-right-color: #10B981; }
+
+        .user-box { background: var(--dark); color: white; padding: 25px; border-radius: 25px; text-align: center; margin-bottom: 20px; }
+        .price { font-size: 40px; font-weight: 900; color: var(--gold); }
+        .history-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #F3F4F6; }
+        
         .hidden { display: none !important; }
+        #toast { fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 50px; font-size: 14px; z-index: 100; }
     </style>
 </head>
 <body>
 
-    <!-- شاشة التحميل الأولية -->
-    <div id="loading-screen" class="fixed inset-0 bg-slate-900 z-50 flex flex-col items-center justify-center text-white">
-        <div class="loader w-12 h-12 border-4 border-white rounded-full mb-4"></div>
-        <p>جاري تشغيل النظام...</p>
-    </div>
-
-    <!-- التنبيهات (Toast) -->
-    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-[60] bg-black text-white px-6 py-3 rounded-full shadow-2xl hidden animate-bounce"></div>
-
-    <header class="bg-slate-900 text-white p-6 text-center border-b-4 border-yellow-400">
-        <h1 class="text-2xl font-black tracking-tighter">SMART WIFI <span class="text-yellow-400">AZILAL</span></h1>
+    <header>
+        <h1 style="margin:0; font-size:20px; letter-spacing:1px;">SMART WIFI <span style="color:var(--gold)">AZILAL</span></h1>
     </header>
 
-    <main class="max-w-md mx-auto p-4">
-        
+    <div class="container">
         <!-- صفحة الدخول -->
-        <div id="view-login" class="bg-white rounded-3xl p-8 shadow-xl mt-10">
-            <h2 class="text-center text-xl font-bold mb-6">تسجيل الدخول</h2>
-            <input type="text" id="login-id" class="w-full p-4 border-2 border-gray-100 rounded-2xl mb-4 text-center focus:border-yellow-400 outline-none text-lg" placeholder="رقم التعريف">
-            <button onclick="app.login()" class="w-full bg-slate-900 text-yellow-400 font-bold p-4 rounded-2xl shadow-lg active:scale-95 transition-transform">دخول</button>
-        </div>
-
-        <!-- صفحة المشترك -->
-        <div id="view-client" class="hidden space-y-6">
-            <div class="bg-slate-900 text-white p-8 rounded-[2.5rem] text-center shadow-2xl">
-                <p class="text-xs opacity-60">مرحباً بك</p>
-                <h2 id="c-name" class="text-xl font-bold my-2">---</h2>
-                <div class="text-5xl font-black text-yellow-400 my-4"><span id="c-due">0</span> <small class="text-sm text-white opacity-50">د.م</small></div>
-                <p class="text-xs opacity-60">مجموع المتأخرات لعام 2025</p>
-            </div>
-            <div class="bg-white rounded-3xl p-6 shadow-md">
-                <h3 class="font-bold text-sm mb-4 border-b pb-2">سجل الاشتراكات</h3>
-                <div id="c-history" class="space-y-4"></div>
-            </div>
-            <button onclick="location.reload()" class="w-full p-4 bg-white rounded-2xl text-gray-500 font-bold">تسجيل الخروج</button>
+        <div id="view-login" class="card">
+            <h3 style="text-align:center; margin-top:0">تسجيل الدخول</h3>
+            <input type="number" id="login-input" placeholder="أدخل رقم التعريف">
+            <button class="btn btn-dark" onclick="handleLogin()">دخول</button>
         </div>
 
         <!-- صفحة المدير -->
-        <div id="view-admin" class="hidden space-y-6">
-            <div class="bg-white rounded-3xl p-6 shadow-md">
-                <h3 class="font-bold border-r-4 border-yellow-400 pr-2 mb-4">إضافة / تعديل مشترك</h3>
-                <div class="space-y-3">
-                    <input type="text" id="adm-name" class="w-full p-3 border rounded-xl" placeholder="الاسم الكامل">
-                    <input type="text" id="adm-id" class="w-full p-3 border rounded-xl" placeholder="رقم التعريف (ID)">
-                    <input type="number" id="adm-price" class="w-full p-3 border rounded-xl" placeholder="ثمن الاشتراك">
-                </div>
+        <div id="view-admin" class="hidden">
+            <div class="card">
+                <h3 style="margin-top:0; border-right: 4px solid var(--gold); padding-right: 10px;">إضافة مشترك</h3>
+                <input type="text" id="adm-name" placeholder="اسم الزبون">
+                <input type="number" id="adm-id" placeholder="رقم التعريف">
+                <input type="number" id="adm-price" placeholder="الثمن الشهري">
                 
-                <p class="text-xs font-bold mt-4 mb-2 text-gray-500">الشهور المؤداة:</p>
-                <div id="month-grid" class="grid grid-cols-3 gap-2"></div>
+                <p style="font-size:12px; font-weight:bold; color:#6B7280; margin-bottom:5px">تحديد الشهور المؤداة:</p>
+                <div id="month-grid" class="month-grid"></div>
                 
-                <button onclick="app.save()" class="w-full bg-slate-900 text-yellow-400 p-4 rounded-xl font-bold mt-6 shadow-lg">حفظ البيانات</button>
-                <button onclick="app.resetForm()" class="w-full text-gray-400 text-sm mt-4">إلغاء وتفريغ الحقول</button>
+                <button class="btn btn-dark" onclick="saveClient()">حفظ المشترك</button>
+                <button class="btn btn-ghost" onclick="resetForm()">تفريغ الخانات</button>
             </div>
-
-            <div id="admin-list" class="space-y-3"></div>
-            <button onclick="location.reload()" class="w-full p-4 text-gray-400 underline">خروج</button>
+            
+            <div id="list-container">
+                <p style="font-size:12px; color:#9CA3AF; margin-bottom:10px">المشتركين المسجلين:</p>
+                <div id="clients-list"></div>
+            </div>
+            <button class="btn btn-ghost" style="margin-top:20px" onclick="location.reload()">تسجيل الخروج</button>
         </div>
 
-    </main>
+        <!-- صفحة الزبون -->
+        <div id="view-client" class="hidden">
+            <div class="user-box">
+                <small style="opacity:0.7">مرحباً بك</small>
+                <h2 id="u-name" style="margin:5px 0">---</h2>
+                <div class="price"><span id="u-due">0</span> <small style="font-size:16px">درهم</small></div>
+                <p style="font-size:12px; opacity:0.8">إجمالي المتأخرات المتبقية</p>
+            </div>
+            
+            <div class="card">
+                <h3 style="font-size:16px; margin-top:0">سجل الدفعات لعام 2025</h3>
+                <div id="u-history"></div>
+            </div>
+            <button class="btn btn-ghost" onclick="location.reload()">خروج</button>
+        </div>
+    </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    <div id="toast" class="hidden"></div>
 
+    <script>
         const months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        const ADMIN_ID = "0602359188";
-        
-        let db, auth, clients = [], selectedMonths = [];
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'azilal_v_final';
+        const ADMIN_PIN = "0602359188";
+        let clients = JSON.parse(localStorage.getItem('azilal_wifi_data')) || [];
+        let selectedMonths = [];
 
-        window.app = {
-            async init() {
-                try {
-                    const config = JSON.parse(__firebase_config);
-                    const fireApp = initializeApp(config);
-                    db = getFirestore(fireApp);
-                    auth = getAuth(fireApp);
+        // تهيئة شبكة الشهور
+        function initMonthGrid() {
+            const grid = document.getElementById('month-grid');
+            grid.innerHTML = months.map(m => `
+                <div id="m-${m}" class="month-item" onclick="toggleMonth('${m}')">${m}</div>
+            `).join('');
+        }
 
-                    onAuthStateChanged(auth, (user) => {
-                        if (user) {
-                            this.sync();
-                            document.getElementById('loading-screen').classList.add('hidden');
-                        } else {
-                            signInAnonymously(auth);
-                        }
-                    });
-                    this.renderMonths();
-                } catch (e) {
-                    this.showToast("خطأ في التحميل، يرجى التحديث");
-                }
-            },
-
-            sync() {
-                const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'clients');
-                onSnapshot(colRef, (snap) => {
-                    clients = snap.docs.map(d => d.data());
-                    this.renderAdminList();
-                });
-            },
-
-            renderMonths() {
-                const grid = document.getElementById('month-grid');
-                grid.innerHTML = months.map(m => `
-                    <button onclick="app.toggleMonth('${m}')" id="m-${m}" class="month-btn p-2 text-xs rounded-lg bg-gray-50 text-gray-400">
-                        ${m}
-                    </button>
-                `).join('');
-            },
-
-            toggleMonth(m) {
-                const btn = document.getElementById(`m-${m}`);
-                if (selectedMonths.includes(m)) {
-                    selectedMonths = selectedMonths.filter(x => x !== m);
-                    btn.classList.remove('active');
-                } else {
-                    selectedMonths.push(m);
-                    btn.classList.add('active');
-                }
-            },
-
-            login() {
-                const id = document.getElementById('login-id').value.trim();
-                if (id === ADMIN_ID) {
-                    this.show('view-admin');
-                } else {
-                    const c = clients.find(x => x.id === id);
-                    if (c) {
-                        this.renderClient(c);
-                        this.show('view-client');
-                    } else {
-                        this.showToast("رقم التعريف غير صحيح");
-                    }
-                }
-            },
-
-            async save() {
-                const name = document.getElementById('adm-name').value;
-                const id = document.getElementById('adm-id').value;
-                const price = document.getElementById('adm-price').value;
-
-                if (!name || !id || !price) return this.showToast("أكمل البيانات");
-
-                try {
-                    await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clients', id), {
-                        name, id, price: Number(price), paidMonths: selectedMonths, updatedAt: Date.now()
-                    });
-                    this.showToast("تم الحفظ بنجاح ✅");
-                    this.resetForm();
-                } catch (e) {
-                    this.showToast("خطأ في الحفظ");
-                }
-            },
-
-            renderAdminList() {
-                const list = document.getElementById('admin-list');
-                list.innerHTML = clients.map(c => `
-                    <div class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border-r-4 border-green-500">
-                        <div>
-                            <div class="font-bold text-sm">${c.name}</div>
-                            <div class="text-xs text-gray-400">ID: ${c.id} | ${c.price} DH</div>
-                        </div>
-                        <div class="flex gap-3 text-xs font-bold">
-                            <button onclick="app.edit('${c.id}')" class="text-blue-500">تعديل</button>
-                            <button onclick="app.delete('${c.id}')" class="text-red-500">حذف</button>
-                        </div>
-                    </div>
-                `).join('');
-            },
-
-            edit(id) {
-                const c = clients.find(x => x.id === id);
-                document.getElementById('adm-name').value = c.name;
-                document.getElementById('adm-id').value = c.id;
-                document.getElementById('adm-price').value = c.price;
-                selectedMonths = [...(c.paidMonths || [])];
-                this.renderMonths();
-                selectedMonths.forEach(m => document.getElementById(`m-${m}`).classList.add('active'));
-                window.scrollTo(0,0);
-            },
-
-            async delete(id) {
-                if (confirm("هل تريد الحذف؟")) {
-                    await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clients', id));
-                    this.showToast("تم الحذف");
-                }
-            },
-
-            renderClient(c) {
-                document.getElementById('c-name').innerText = c.name;
-                const curMonth = new Date().getMonth();
-                const pastMonths = months.slice(0, curMonth + 1);
-                const paid = c.paidMonths || [];
-                const unpaid = pastMonths.filter(m => !paid.includes(m));
-                
-                document.getElementById('c-due').innerText = unpaid.length * c.price;
-                document.getElementById('c-history').innerHTML = [...pastMonths].reverse().map(m => `
-                    <div class="flex justify-between items-center text-sm">
-                        <span>شهر ${m}</span>
-                        <span class="${paid.includes(m) ? 'text-green-500 font-bold' : 'text-red-500'}">
-                            ${paid.includes(m) ? 'تم الدفع ✓' : 'غير مؤدى ✖'}
-                        </span>
-                    </div>
-                `).join('');
-            },
-
-            resetForm() {
-                document.getElementById('adm-name').value = '';
-                document.getElementById('adm-id').value = '';
-                document.getElementById('adm-price').value = '';
-                selectedMonths = [];
-                this.renderMonths();
-            },
-
-            show(id) {
-                document.getElementById('view-login').classList.add('hidden');
-                document.getElementById('view-admin').classList.add('hidden');
-                document.getElementById('view-client').classList.add('hidden');
-                document.getElementById(id).classList.remove('hidden');
-            },
-
-            showToast(msg) {
-                const t = document.getElementById('toast');
-                t.innerText = msg;
-                t.classList.remove('hidden');
-                setTimeout(() => t.classList.add('hidden'), 3000);
+        function toggleMonth(m) {
+            const el = document.getElementById(`m-${m}`);
+            if (selectedMonths.includes(m)) {
+                selectedMonths = selectedMonths.filter(x => x !== m);
+                el.classList.remove('active');
+            } else {
+                selectedMonths.push(m);
+                el.classList.add('active');
             }
-        };
+        }
 
-        window.onload = () => app.init();
+        function handleLogin() {
+            const pin = document.getElementById('login-input').value;
+            if (pin === ADMIN_PIN) {
+                showView('view-admin');
+                renderAdminList();
+                initMonthGrid();
+            } else {
+                const c = clients.find(x => x.id === pin);
+                if (c) {
+                    renderClientView(c);
+                    showView('view-client');
+                } else {
+                    showToast("رقم غير مسجل");
+                }
+            }
+        }
+
+        function saveClient() {
+            const name = document.getElementById('adm-name').value;
+            const id = document.getElementById('adm-id').value;
+            const price = document.getElementById('adm-price').value;
+
+            if (!name || !id || !price) return showToast("أكمل البيانات");
+
+            const index = clients.findIndex(x => x.id === id);
+            const clientData = { name, id, price: Number(price), paidMonths: [...selectedMonths] };
+
+            if (index > -1) clients[index] = clientData;
+            else clients.push(clientData);
+
+            localStorage.setItem('azilal_wifi_data', JSON.stringify(clients));
+            showToast("تم الحفظ بنجاح");
+            resetForm();
+            renderAdminList();
+        }
+
+        function renderAdminList() {
+            const list = document.getElementById('clients-list');
+            list.innerHTML = clients.map(c => `
+                <div class="client-item ${c.paidMonths.length > 0 ? 'paid' : ''}">
+                    <div>
+                        <div style="font-weight:bold; font-size:14px">${c.name}</div>
+                        <div style="font-size:10px; color:#999">ID: ${c.id} | ${c.price} DH</div>
+                    </div>
+                    <div style="display:flex; gap:10px">
+                        <button onclick="editClient('${c.id}')" style="border:none; color:blue; background:none; font-size:12px">تعديل</button>
+                        <button onclick="deleteClient('${c.id}')" style="border:none; color:red; background:none; font-size:12px">حذف</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editClient(id) {
+            const c = clients.find(x => x.id === id);
+            document.getElementById('adm-name').value = c.name;
+            document.getElementById('adm-id').value = c.id;
+            document.getElementById('adm-price').value = c.price;
+            selectedMonths = [...c.paidMonths];
+            initMonthGrid();
+            selectedMonths.forEach(m => document.getElementById(`m-${m}`).classList.add('active'));
+            window.scrollTo(0,0);
+        }
+
+        function deleteClient(id) {
+            if(confirm("هل تريد الحذف؟")) {
+                clients = clients.filter(x => x.id !== id);
+                localStorage.setItem('azilal_wifi_data', JSON.stringify(clients));
+                renderAdminList();
+            }
+        }
+
+        function renderClientView(c) {
+            document.getElementById('u-name').innerText = c.name;
+            const curMonthIdx = new Date().getMonth();
+            const pastMonths = months.slice(0, curMonthIdx + 1);
+            const unpaidCount = pastMonths.filter(m => !c.paidMonths.includes(m)).length;
+            
+            document.getElementById('u-due').innerText = unpaidCount * c.price;
+            
+            document.getElementById('u-history').innerHTML = pastMonths.reverse().map(m => `
+                <div class="history-row">
+                    <span style="font-size:14px">${m}</span>
+                    <span style="font-size:12px; font-weight:bold; color:${c.paidMonths.includes(m) ? '#10B981' : '#EF4444'}">
+                        ${c.paidMonths.includes(m) ? 'خالص ✓' : 'غير خالص ✖'}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function resetForm() {
+            document.getElementById('adm-name').value = '';
+            document.getElementById('adm-id').value = '';
+            document.getElementById('adm-price').value = '';
+            selectedMonths = [];
+            initMonthGrid();
+        }
+
+        function showView(id) {
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-admin').classList.add('hidden');
+            document.getElementById('view-client').classList.add('hidden');
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.innerText = msg;
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 3000);
+        }
     </script>
 </body>
 </html>
