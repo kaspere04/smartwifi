@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Smart WIFI Azilal</title>
+    <title>Smart WIFI Azilal - الإصدار المستقر</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- تحميل Firebase بنسخة التوافق القصوى -->
+    <!-- تحميل Firebase بنسخة التوافق -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
@@ -16,13 +16,13 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
         * { font-family: 'Tajawal', sans-serif; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-        body { background-color: #f8fafc; margin: 0; overflow-x: hidden; }
+        body { background-color: #f1f5f9; margin: 0; }
         .hidden { display: none !important; }
         
         #loader { 
             position: fixed; inset: 0; background: #0f172a; z-index: 9999; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            color: white; 
+            color: white; transition: opacity 0.5s;
         }
         .loader-spin { 
             width: 40px; height: 40px; border: 3px solid #1e293b; 
@@ -33,130 +33,120 @@
 
         .year-btn.active { background: #0f172a; color: #fbbf24; border-color: #fbbf24; }
         .month-btn.active { background: #fbbf24; color: #0f172a; font-weight: bold; border-color: #0f172a; }
+        
+        input:focus { border-color: #fbbf24 !important; outline: none; }
     </style>
 </head>
 <body>
 
-    <!-- شاشة التحميل (ستختفي تلقائياً بعد 5 ثوانٍ كأقصى حد) -->
+    <!-- شاشة التحميل -->
     <div id="loader">
-        <div class="loader-spin mb-6"></div>
-        <h1 class="font-black text-2xl tracking-tighter text-white">SMART WIFI <span class="text-yellow-400">AZILAL</span></h1>
-        <p id="loader-status" class="text-slate-500 text-xs mt-4">جاري تحميل النظام...</p>
-        <button id="bypass-btn" onclick="hideLoader()" class="mt-8 text-[10px] text-slate-600 underline hidden">تجاوز التحميل</button>
+        <div class="loader-spin mb-4"></div>
+        <h1 class="font-black text-xl text-white">Smart WIFI <span class="text-yellow-400">Azilal</span></h1>
+        <button id="bypass-btn" onclick="hideLoader()" class="mt-6 text-[10px] text-slate-500 underline hidden">دخول يدوي</button>
     </div>
 
     <div id="main-content">
-        <header class="bg-slate-900 text-white p-5 text-center border-b-4 border-yellow-400 sticky top-0 z-50">
-            <h1 class="text-xl font-black italic tracking-tighter">SMART WIFI <span class="text-yellow-400">AZILAL</span></h1>
+        <header class="bg-slate-900 text-white p-4 shadow-lg border-b-2 border-yellow-400 flex justify-between items-center sticky top-0 z-40">
+            <h1 class="font-black italic text-lg tracking-tighter">SMART WIFI <span class="text-yellow-400">AZILAL</span></h1>
+            <div id="header-user" class="text-[10px] font-bold text-slate-400"></div>
         </header>
 
-        <main class="max-w-md mx-auto p-4">
+        <main class="max-w-lg mx-auto p-4 pb-20">
             <!-- تسجيل الدخول -->
-            <section id="view-login" class="mt-10 bg-white rounded-3xl p-8 shadow-xl border border-slate-100">
-                <h2 class="text-center font-black text-2xl mb-8 text-slate-800">بوابة المشتركين</h2>
-                <div class="space-y-4">
-                    <input type="tel" id="login-input" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center text-2xl font-black outline-none focus:border-yellow-400 transition-all" placeholder="06XXXXXXXX">
-                    <button onclick="appLogic.login()" class="w-full bg-slate-900 text-yellow-400 font-black py-4 rounded-2xl shadow-lg active:scale-95 transition-all">دخول</button>
+            <section id="view-login" class="mt-8 bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                        <svg class="w-8 h-8 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </div>
+                    <h2 class="font-black text-xl text-slate-800">بوابة الدخول</h2>
                 </div>
+                <input type="tel" id="login-input" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl text-center text-xl font-bold mb-4" placeholder="أدخل رقم الهاتف">
+                <button onclick="appLogic.login()" class="w-full bg-slate-900 text-yellow-400 font-black py-4 rounded-2xl shadow-md active:scale-95 transition-all">تأكيد الدخول</button>
             </section>
 
             <!-- واجهة الإدارة -->
-            <section id="view-admin" class="hidden space-y-6 mt-4">
-                <div class="bg-white rounded-3xl p-6 shadow-md border border-slate-100">
-                    <h3 class="font-black text-slate-800 mb-4">إضافة / تعديل مشترك</h3>
+            <section id="view-admin" class="hidden space-y-4">
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-200">
+                    <h3 class="font-black text-slate-800 mb-4 flex items-center gap-2">
+                        <span class="w-2 h-6 bg-yellow-400 rounded-full"></span>
+                        إدارة المشتركين
+                    </h3>
                     <div class="space-y-3">
                         <input type="text" id="adm-name" class="w-full p-4 bg-slate-50 border rounded-xl" placeholder="الاسم الكامل">
-                        <input type="tel" id="adm-id" class="w-full p-4 bg-slate-50 border rounded-xl" placeholder="رقم الهاتف">
-                        <input type="number" id="adm-price" class="w-full p-4 bg-slate-50 border rounded-xl" placeholder="السعر الشهري">
+                        <input type="tel" id="adm-id" class="w-full p-4 bg-slate-50 border rounded-xl" placeholder="رقم الهاتف (سيستخدم للدخول)">
+                        <input type="number" id="adm-price" class="w-full p-4 bg-slate-50 border rounded-xl" placeholder="الثمن الشهري (مثلاً 200)">
                         
-                        <div class="p-3 bg-slate-50 rounded-xl">
-                            <p class="text-[10px] font-bold text-slate-400 mb-3 text-center">تحديد الدفعات</p>
-                            <div id="year-grid" class="grid grid-cols-4 gap-2 mb-3"></div>
+                        <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                            <p class="text-[11px] font-black text-slate-400 mb-3 text-center uppercase tracking-widest">سجل الدفعات</p>
+                            <div id="year-grid" class="grid grid-cols-4 gap-2 mb-4"></div>
                             <div id="month-grid" class="grid grid-cols-3 gap-2 hidden"></div>
                         </div>
 
-                        <button onclick="appLogic.save()" class="w-full bg-slate-900 text-yellow-400 font-black p-4 rounded-xl mt-4 shadow-lg">حفظ البيانات</button>
+                        <button id="save-btn" onclick="appLogic.save()" class="w-full bg-slate-900 text-yellow-400 font-black py-5 rounded-2xl mt-4 shadow-xl active:scale-95 flex justify-center items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                            حفظ البيانات والاشتراك
+                        </button>
                     </div>
                 </div>
-                <div id="admin-list" class="space-y-3"></div>
-                <button onclick="location.reload()" class="w-full py-8 text-slate-300 text-[10px] font-bold uppercase tracking-widest">تسجيل الخروج</button>
+
+                <h3 class="font-black text-slate-400 text-sm px-2 pt-4">قائمة المشتركين الحالية</h3>
+                <div id="admin-list" class="space-y-2"></div>
+                
+                <button onclick="location.reload()" class="w-full py-6 text-slate-400 text-[10px] font-bold uppercase tracking-tighter">تسجيل الخروج</button>
             </section>
 
             <!-- واجهة العميل -->
             <section id="view-client" class="hidden space-y-4">
-                <div class="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl text-center border-b-8 border-yellow-400">
-                    <h2 id="c-name" class="text-2xl font-black mb-2">--</h2>
-                    <div class="bg-white/5 p-6 rounded-3xl mt-4">
-                        <p class="text-[10px] opacity-60 mb-1 uppercase">المبلغ المطلوب أداؤه</p>
-                        <div class="text-5xl font-black text-yellow-400"><span id="c-due">0</span><small class="text-sm ml-1">DH</small></div>
+                <div class="bg-slate-900 text-white p-6 rounded-[2rem] shadow-xl text-center border-b-4 border-yellow-400">
+                    <h2 id="c-name" class="text-xl font-black mb-1">--</h2>
+                    <p id="c-id-display" class="text-[10px] text-slate-400 mb-4 opacity-50">--</p>
+                    <div class="bg-white/5 py-4 px-2 rounded-2xl border border-white/10">
+                        <p class="text-[10px] text-yellow-400 font-bold mb-1">المبلغ المتبقي بذمتكم</p>
+                        <div class="text-4xl font-black"><span id="c-due">0</span> <small class="text-sm">DH</small></div>
                     </div>
                 </div>
-                <h3 class="font-black text-slate-800 px-2 mt-8">سجل الدفعات</h3>
-                <div id="client-history" class="space-y-4 pb-10"></div>
-                <button onclick="location.reload()" class="w-full p-4 bg-white text-slate-400 font-bold rounded-2xl border-2 border-slate-100">إغلاق</button>
+                
+                <div id="client-history" class="space-y-3 pt-4"></div>
+                <button onclick="location.reload()" class="w-full p-4 mt-6 bg-white text-slate-500 font-bold rounded-2xl border-2 border-slate-100 shadow-sm">إغلاق الحساب</button>
             </section>
         </main>
     </div>
 
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-black/90 text-yellow-400 px-8 py-4 rounded-2xl text-sm font-bold hidden z-[9999] shadow-2xl"></div>
+    <!-- التنبيهات -->
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-yellow-400 px-6 py-3 rounded-xl text-xs font-bold hidden z-[10000] shadow-2xl border border-yellow-400/20"></div>
 
     <script>
-        // إعدادات المتغيرات العامة
         var ADMIN_ID = "0602359188";
         var MONTHS = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
         var YEARS = [2024, 2025, 2026, 2027];
         var db, clients = [], activeYear = null, editingPayments = {};
-        var appId = (typeof __app_id !== 'undefined') ? __app_id : 'azilal_wifi_final';
+        var appId = (typeof __app_id !== 'undefined') ? __app_id : 'azilal_smart_wifi_v2';
 
-        // وظائف الواجهة
         function hideLoader() {
-            var loader = document.getElementById('loader');
-            if(loader) {
-                loader.style.opacity = '0';
-                setTimeout(function(){ loader.classList.add('hidden'); }, 500);
-            }
+            var l = document.getElementById('loader');
+            if(l) { l.style.opacity = '0'; setTimeout(function(){ l.classList.add('hidden'); }, 500); }
         }
 
-        function showToast(msg) {
+        function showToast(m) {
             var t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.remove('hidden');
+            t.innerText = m; t.classList.remove('hidden');
             setTimeout(function(){ t.classList.add('hidden'); }, 3000);
         }
 
-        // منطق التطبيق
         var appLogic = {
             init: function() {
-                // مؤقت طوارئ لإخفاء الشاشة السوداء في حال فشل أي شيء
-                setTimeout(function() {
-                    document.getElementById('bypass-btn').classList.remove('hidden');
-                    if(document.getElementById('loader-status').innerText.indexOf('جاري') > -1) {
-                        console.log("Slow connection - showing bypass");
-                    }
-                }, 5000);
-
+                setTimeout(function(){ document.getElementById('bypass-btn').classList.remove('hidden'); }, 4000);
+                
                 try {
-                    if (typeof __firebase_config === 'undefined') {
-                        throw new Error("Config not found");
-                    }
                     var config = JSON.parse(__firebase_config);
                     firebase.initializeApp(config);
                     db = firebase.firestore();
                     
-                    firebase.auth().signInAnonymously().then(function() {
+                    firebase.auth().signInAnonymously().then(function(user) {
                         appLogic.sync();
-                    }).catch(function(e) {
-                        appLogic.status("خطأ في المصادقة: " + e.message);
-                    });
-                } catch (e) {
-                    appLogic.status("انتظار الإعدادات...");
-                    // محاولة الإعادة بعد ثانية إذا لم تكن الإعدادات جاهزة
-                    setTimeout(appLogic.init, 1000);
-                }
-            },
-
-            status: function(txt) {
-                document.getElementById('loader-status').innerText = txt;
+                    }).catch(function(e){ alert("Auth Error: " + e.message); });
+                } catch(e) { setTimeout(appLogic.init, 1000); }
             },
 
             sync: function() {
@@ -165,34 +155,33 @@
                     clients = snap.docs.map(function(d){ return d.data(); });
                     appLogic.renderList();
                     hideLoader();
-                }, function(err) {
-                    appLogic.status("خطأ في البيانات: " + err.message);
-                });
+                }, function(err){ console.error(err); });
             },
 
             login: function() {
                 var val = document.getElementById('login-input').value.trim();
-                if(!val) return showToast("أدخل الرقم");
+                if(!val) return showToast("يرجى إدخال الرقم");
                 
                 if(val === ADMIN_ID) {
                     appLogic.view('view-admin');
                     appLogic.renderYears();
+                    document.getElementById('header-user').innerText = "وضع المدير";
                 } else {
                     var c = clients.find(function(x){ return x.id === val; });
                     if(c) {
                         appLogic.renderClient(c);
                         appLogic.view('view-client');
+                        document.getElementById('header-user').innerText = "مشترك";
                     } else {
-                        showToast("الرقم غير مسجل");
+                        showToast("هذا الرقم غير موجود");
                     }
                 }
             },
 
             view: function(id) {
-                var ids = ['view-login', 'view-admin', 'view-client'];
-                for(var i=0; i<ids.length; i++) {
-                    document.getElementById(ids[i]).classList.add('hidden');
-                }
+                ['view-login', 'view-admin', 'view-client'].forEach(function(v){
+                    document.getElementById(v).classList.add('hidden');
+                });
                 document.getElementById(id).classList.remove('hidden');
                 window.scrollTo(0,0);
             },
@@ -201,14 +190,13 @@
                 var grid = document.getElementById('year-grid');
                 grid.innerHTML = YEARS.map(function(y) {
                     var has = editingPayments[y] && editingPayments[y].length > 0;
-                    return '<button onclick="appLogic.setYear('+y+')" id="y-'+y+'" class="year-btn p-3 bg-white border-2 rounded-xl text-[10px] font-bold '+(has?'border-yellow-400':'border-slate-100')+'">'+y+'</button>';
+                    return '<button onclick="appLogic.setYear('+y+')" id="y-'+y+'" class="year-btn p-3 bg-white border-2 rounded-xl text-[10px] font-bold '+(has?'border-yellow-400 text-slate-900':'border-slate-100 text-slate-400')+'">'+y+'</button>';
                 }).join('');
             },
 
             setYear: function(y) {
                 activeYear = y;
-                var btns = document.querySelectorAll('.year-btn');
-                for(var i=0; i<btns.length; i++) btns[i].classList.remove('active');
+                document.querySelectorAll('.year-btn').forEach(function(b){ b.classList.remove('active'); });
                 document.getElementById('y-'+y).classList.add('active');
                 document.getElementById('month-grid').classList.remove('hidden');
                 appLogic.renderMonths();
@@ -219,7 +207,7 @@
                 var paid = editingPayments[activeYear] || [];
                 grid.innerHTML = MONTHS.map(function(m) {
                     var isActive = paid.indexOf(m) > -1;
-                    return '<button onclick="appLogic.toggleMonth(\''+m+'\')" class="month-btn p-3 rounded-xl border-2 text-[9px] '+(isActive?'active':'bg-white border-slate-50 text-slate-300')+'">'+m+'</button>';
+                    return '<button onclick="appLogic.toggleMonth(\''+m+'\')" class="month-btn p-3 rounded-xl border-2 text-[10px] '+(isActive?'active':'bg-white border-slate-50 text-slate-400')+'">'+m+'</button>';
                 }).join('');
             },
 
@@ -233,26 +221,50 @@
             },
 
             save: function() {
-                var name = document.getElementById('adm-name').value;
-                var id = document.getElementById('adm-id').value;
-                var price = document.getElementById('adm-price').value;
-                if(!name || !id || !price) return showToast("أكمل الخانات");
+                var btn = document.getElementById('save-btn');
+                var name = document.getElementById('adm-name').value.trim();
+                var id = document.getElementById('adm-id').value.trim();
+                var price = document.getElementById('adm-price').value.trim();
 
-                db.doc("artifacts/"+appId+"/public/data/clients/"+id).set({
-                    name: name, id: id, price: Number(price), 
-                    payments: editingPayments, updated: Date.now()
+                if(!name || !id || !price) return showToast("أكمل جميع الخانات");
+
+                btn.disabled = true;
+                btn.innerHTML = "جاري الحفظ...";
+
+                // استخدام المسار الصحيح والمؤمن
+                var docRef = db.collection("artifacts").doc(appId).collection("public").doc("data").collection("clients").doc(id);
+                
+                docRef.set({
+                    name: name,
+                    id: id,
+                    price: Number(price),
+                    payments: editingPayments,
+                    lastUpdate: Date.now()
                 }).then(function() {
-                    showToast("تم الحفظ ✅");
+                    showToast("تم حفظ بيانات " + name);
                     appLogic.reset();
+                    btn.disabled = false;
+                    btn.innerHTML = 'حفظ البيانات والاشتراك';
+                }).catch(function(err) {
+                    alert("خطأ في الحفظ: " + err.message);
+                    btn.disabled = false;
+                    btn.innerHTML = 'حفظ البيانات والاشتراك';
                 });
             },
 
             renderList: function() {
                 var list = document.getElementById('admin-list');
+                if(clients.length === 0) {
+                    list.innerHTML = '<div class="text-center py-8 text-slate-400 text-xs italic">لا يوجد مشتركون حالياً</div>';
+                    return;
+                }
                 list.innerHTML = clients.map(function(c) {
                     return '<div onclick="appLogic.edit(\''+c.id+'\')" class="bg-white p-4 rounded-2xl flex justify-between items-center shadow-sm border border-slate-100 active:bg-slate-50">' +
-                           '<div><div class="font-black text-slate-800">'+c.name+'</div><div class="text-[10px] text-slate-400 uppercase">ID: '+c.id+'</div></div>' +
-                           '<button onclick="event.stopPropagation(); appLogic.del(\''+c.id+'\')" class="text-red-200 p-2">حذف</button></div>';
+                           '<div><div class="font-black text-slate-800 text-sm">'+c.name+'</div><div class="text-[9px] text-slate-400 uppercase font-bold">ID: '+c.id+'</div></div>' +
+                           '<div class="flex items-center gap-3">' +
+                           '<div class="text-xs font-black text-slate-800">'+c.price+' DH</div>' +
+                           '<button onclick="event.stopPropagation(); appLogic.del(\''+c.id+'\')" class="bg-red-50 text-red-500 p-2 rounded-lg"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>' +
+                           '</div></div>';
                 }).join('');
             },
 
@@ -264,17 +276,21 @@
                 editingPayments = JSON.parse(JSON.stringify(c.payments || {}));
                 appLogic.renderYears();
                 window.scrollTo(0,0);
+                showToast("تم تحميل بيانات " + c.name);
             },
 
             del: function(id) {
-                if(confirm("حذف؟")) db.doc("artifacts/"+appId+"/public/data/clients/"+id).delete();
+                if(confirm("هل أنت متأكد من حذف هذا المشترك نهائياً؟")) {
+                    db.collection("artifacts").doc(appId).collection("public").doc("data").collection("clients").doc(id).delete();
+                }
             },
 
             renderClient: function(c) {
                 document.getElementById('c-name').innerText = c.name;
+                document.getElementById('c-id-display').innerText = "رقم الاشتراك: " + c.id;
                 var hist = document.getElementById('client-history');
                 hist.innerHTML = '';
-                var due = 0;
+                var totalDue = 0;
                 var now = new Date();
                 var curY = now.getFullYear();
                 var curM = now.getMonth();
@@ -282,21 +298,23 @@
                 YEARS.filter(function(y){ return y <= curY; }).reverse().forEach(function(y) {
                     var paid = c.payments ? (c.payments[y] || []) : [];
                     var limit = (y < curY) ? 11 : curM;
-                    var unpaid = MONTHS.slice(0, limit + 1).filter(function(m){ return paid.indexOf(m) === -1; });
-                    due += (unpaid.length * c.price);
+                    var monthsInYear = MONTHS.slice(0, limit + 1);
+                    var unpaid = monthsInYear.filter(function(m){ return paid.indexOf(m) === -1; });
+                    totalDue += (unpaid.length * c.price);
+
+                    if(paid.length === 0 && unpaid.length === 0) return;
 
                     var card = document.createElement('div');
-                    card.className = "bg-white p-6 rounded-3xl border border-slate-100 shadow-sm";
-                    card.innerHTML = '<div class="flex justify-between items-center mb-4 border-b pb-2"><span class="font-black">'+y+'</span><span class="text-[10px] '+(unpaid.length?'text-red-500':'text-green-500')+'">'+(unpaid.length?unpaid.length*c.price+' DH':'خالص')+'</span></div>' +
+                    card.className = "bg-white p-5 rounded-3xl shadow-sm border border-slate-100";
+                    card.innerHTML = '<div class="flex justify-between items-center mb-4 border-b border-slate-50 pb-2"><span class="font-black text-slate-800">'+y+'</span><span class="text-[10px] font-bold px-3 py-1 rounded-full '+(unpaid.length?'bg-red-50 text-red-500':'bg-green-50 text-green-500')+'">'+(unpaid.length?unpaid.length*c.price+' DH متبقية':'خالص بالكامل')+'</span></div>' +
                                      '<div class="grid grid-cols-4 gap-2">' + 
-                                     MONTHS.map(function(m, idx) {
-                                         if(idx > limit && paid.indexOf(m) === -1) return '';
+                                     monthsInYear.map(function(m) {
                                          var ok = paid.indexOf(m) > -1;
-                                         return '<div class="flex flex-col items-center"><div class="w-full h-1 rounded-full '+(ok?'bg-green-400':'bg-red-400')+'"></div><span class="text-[8px] '+(ok?'text-slate-300':'text-red-500 font-bold')+'">'+m+'</span></div>';
+                                         return '<div class="flex flex-col items-center gap-1"><div class="w-full h-1 rounded-full '+(ok?'bg-green-400':'bg-red-400 shadow-[0_0_5px_rgba(239,68,68,0.3)]')+'"></div><span class="text-[8px] '+(ok?'text-slate-300':'text-red-500 font-bold')+'">'+m+'</span></div>';
                                      }).join('') + '</div>';
                     hist.appendChild(card);
                 });
-                document.getElementById('c-due').innerText = due;
+                document.getElementById('c-due').innerText = totalDue;
             },
 
             reset: function() {
@@ -310,7 +328,6 @@
             }
         };
 
-        // بدء التشغيل
         appLogic.init();
     </script>
 </body>
