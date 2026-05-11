@@ -4,167 +4,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart WIFI Azilal | الإدارة السحابية</title>
+    <title>Smart WIFI Azilal | بوابة السحابة</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Firebase SDKs -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
-        // Firebase Configuration (Environment provided)
-        const firebaseConfig = JSON.parse(__firebase_config);
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'smart-wifi-azilal';
-
-        window.smartDB = { db, collection, doc, setDoc, getDoc, onSnapshot, deleteDoc, appId, query };
-    </script>
-
+    
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #f8f9fa; }
+        body { font-family: 'Cairo', sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
         .bg-smart-yellow { background-color: #ffcc00; }
         .text-smart-yellow { color: #ffcc00; }
         .border-smart-yellow { border-color: #ffcc00; }
-        .shadow-premium { box-shadow: 0 20px 50px rgba(0,0,0,0.15); }
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #ffcc00; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #000; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="min-h-screen pb-10">
 
     <!-- Header -->
-    <header class="bg-black text-white py-10 border-b-8 border-smart-yellow shadow-2xl relative overflow-hidden">
-        <div class="container mx-auto px-6 text-center relative z-10">
-            <div class="inline-block p-4 bg-smart-yellow rounded-2xl mb-4 transform rotate-3 shadow-lg">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+    <header class="bg-black text-white py-12 border-b-8 border-smart-yellow shadow-2xl relative overflow-hidden text-center">
+        <div class="relative z-10">
+            <div class="inline-block p-4 bg-smart-yellow rounded-3xl mb-4 transform rotate-2 shadow-lg">
+                <svg width="45" height="45" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
             </div>
-            <h1 class="text-4xl font-black italic tracking-tighter uppercase leading-none">SMART WIFI <span class="text-smart-yellow block text-5xl mt-2">AZILAL</span></h1>
-            <p class="mt-4 text-smart-yellow font-bold text-xs tracking-[0.4em] uppercase opacity-80 italic">Cloud Management System</p>
+            <h1 class="text-4xl font-black italic tracking-tighter uppercase leading-none">SMART WIFI</h1>
+            <div class="inline-block bg-smart-yellow text-black px-6 py-1 text-4xl font-black italic mt-2 rounded-xl shadow-lg">AZILAL</div>
+            <p class="mt-6 text-smart-yellow font-bold text-[10px] tracking-[0.4em] uppercase opacity-70 italic">Cloud Management System</p>
         </div>
     </header>
 
-    <main class="max-w-md mx-auto px-6 -mt-8 relative z-20">
+    <main class="max-w-md mx-auto px-6 -mt-10 relative z-20">
         
-        <!-- Loading Indicator -->
-        <div id="auth-loader" class="bg-white p-4 rounded-2xl shadow-lg flex items-center justify-center gap-3 mb-4">
-            <div class="loader"></div>
-            <span class="text-xs font-bold text-slate-500">جاري الاتصال بالسحابة...</span>
+        <!-- Status Indicator -->
+        <div id="cloud-status" class="bg-white p-5 rounded-[2rem] shadow-xl flex items-center justify-center gap-3 mb-6 border border-slate-50">
+            <div class="loader" id="main-loader"></div>
+            <span id="status-text" class="text-sm font-black text-slate-500 italic">جاري الربط مع السحابة...</span>
         </div>
 
-        <!-- Login View -->
-        <div id="login-view" class="bg-white rounded-[2.5rem] shadow-premium p-10 hidden">
+        <!-- Login Card -->
+        <div id="login-view" class="bg-white rounded-[2.5rem] shadow-[0_30px_60px_rgba(0,0,0,0.15)] p-10 hidden fade-in border border-white">
             <div class="text-center mb-8">
-                <h2 class="text-2xl font-black text-slate-800">مرحباً بك</h2>
-                <p class="text-slate-400 text-sm mt-1">أدخل معرفك لمتابعة اشتراكك</p>
+                <h2 class="text-2xl font-black text-slate-800">بوابة المشتركين</h2>
+                <div class="w-10 h-1 bg-smart-yellow mx-auto mt-2 rounded-full"></div>
             </div>
             <div class="space-y-4">
-                <input type="text" id="login-id" placeholder="رقم المعرف (ID)" class="w-full p-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-smart-yellow focus:bg-white outline-none text-center font-black text-xl transition-all">
-                <button onclick="handleLogin()" class="w-full bg-black text-smart-yellow font-black py-5 rounded-2xl shadow-xl hover:bg-slate-900 flex items-center justify-center gap-2 group transition-all">
-                    <span>دخول آمن</span>
-                    <svg class="group-hover:translate-x-[-5px] transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M15 3l6 6-6 6M21 9H9"/></svg>
+                <input type="text" id="login-id" placeholder="رقم المعرف (ID)" class="w-full p-5 bg-slate-50 rounded-2xl border-2 border-transparent focus:border-smart-yellow focus:bg-white outline-none text-center font-black text-xl transition-all shadow-inner">
+                <button onclick="handleLogin()" class="w-full bg-black text-smart-yellow font-black py-5 rounded-2xl shadow-xl hover:bg-slate-900 flex items-center justify-center gap-3 active:scale-95 transition-all">
+                    <span>دخول للحساب</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M15 3l6 6-6 6M21 9H9"/></svg>
                 </button>
             </div>
         </div>
 
-        <!-- Client View -->
-        <div id="client-view" class="hidden space-y-4">
-            <div class="bg-black text-white p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden">
+        <!-- Client Dashboard -->
+        <div id="client-view" class="hidden space-y-4 fade-in">
+            <div class="bg-black text-white p-8 rounded-[2.5rem] shadow-2xl relative overflow-hidden border-r-8 border-smart-yellow">
                 <div class="relative z-10">
-                    <p class="text-smart-yellow text-[10px] font-bold uppercase tracking-widest mb-1">اسم المشترك</p>
+                    <p class="text-smart-yellow text-[10px] font-black uppercase tracking-widest mb-1">بيانات الاشتراك</p>
                     <h3 id="client-name-display" class="text-3xl font-black italic">---</h3>
                     <div class="mt-4 flex items-center gap-2">
-                        <span class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></span>
-                        <span class="text-xs font-bold">متصل بالسحابة</span>
+                        <span class="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-[0_0_10px_#22c55e]"></span>
+                        <span class="text-[10px] font-black uppercase">السحابة متصلة</span>
                     </div>
                 </div>
-                <button onclick="location.reload()" class="absolute top-6 left-6 bg-white/10 p-3 rounded-2xl text-white hover:bg-red-500">
+                <button onclick="location.reload()" class="absolute top-6 left-6 bg-white/10 p-3 rounded-2xl text-white hover:bg-red-500 transition-colors">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
                 </button>
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm text-center">
-                    <p class="text-slate-400 text-[10px] font-bold uppercase mb-1">واجب الاشتراك</p>
-                    <h4 id="client-price" class="text-xl font-black">0 د</h4>
+                <div class="bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm text-center">
+                    <p class="text-slate-400 text-[10px] font-black uppercase mb-1">الواجب الشهري</p>
+                    <h4 id="client-price" class="text-2xl font-black">0 د</h4>
                 </div>
-                <div class="bg-red-600 text-white p-6 rounded-3xl shadow-lg text-center">
-                    <p class="text-white/60 text-[10px] font-bold uppercase mb-1">المبلغ المتبقي</p>
-                    <h4 id="client-due" class="text-xl font-black">0 د</h4>
+                <div class="bg-red-600 text-white p-6 rounded-[2rem] shadow-lg shadow-red-100 text-center">
+                    <p class="text-white/60 text-[10px] font-black uppercase mb-1">المبلغ المتبقي</p>
+                    <h4 id="client-due" class="text-2xl font-black">0 د</h4>
                 </div>
             </div>
 
-            <div class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-slate-100">
+            <div class="bg-white rounded-[2.5rem] shadow-xl overflow-hidden border border-slate-50">
                 <div class="p-6 bg-slate-50 border-b flex justify-between items-center">
-                    <span class="font-black text-slate-800">سجل دفعات 2026</span>
-                    <span class="text-[9px] font-bold bg-black text-smart-yellow px-2 py-1 rounded italic uppercase">Live Data</span>
+                    <span class="font-black text-slate-800 italic">تتبع الأداء 2026</span>
+                    <span class="text-[9px] font-black bg-black text-smart-yellow px-3 py-1 rounded-full uppercase tracking-tighter">Live Database</span>
                 </div>
                 <div id="months-list" class="divide-y divide-slate-50"></div>
             </div>
         </div>
 
-        <!-- Admin View -->
-        <div id="admin-view" class="hidden space-y-6">
-            <div class="bg-smart-yellow p-8 rounded-[2.5rem] shadow-xl text-black">
-                <h2 class="text-2xl font-black italic uppercase">Cloud Panel</h2>
-                <p class="text-black/50 text-xs font-bold tracking-tighter">إدارة المشتركين عبر السحاب</p>
+        <!-- Admin Dashboard -->
+        <div id="admin-view" class="hidden space-y-6 fade-in">
+            <div class="bg-smart-yellow p-8 rounded-[2.5rem] shadow-xl text-black relative">
+                <h2 class="text-2xl font-black italic uppercase leading-none">Admin Cloud</h2>
+                <p class="text-black/50 text-[10px] font-black uppercase tracking-widest mt-1">تسيير قاعدة المشتركين</p>
             </div>
 
-            <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl space-y-4">
-                <input type="text" id="adm-name" placeholder="الاسم الكامل" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 outline-none focus:border-smart-yellow font-bold">
-                <input type="text" id="adm-id" placeholder="رقم المعرف (ID)" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 outline-none focus:border-smart-yellow font-bold">
-                <input type="number" id="adm-price" placeholder="الثمن" value="200" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 outline-none focus:border-smart-yellow font-bold">
+            <div class="bg-white p-8 rounded-[2.5rem] shadow-2xl border border-white space-y-4">
+                <div class="space-y-3">
+                    <input type="text" id="adm-name" placeholder="اسم المشترك" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 outline-none focus:border-smart-yellow font-black">
+                    <input type="text" id="adm-id" placeholder="رقم المعرف (ID)" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 outline-none focus:border-smart-yellow font-black">
+                    <input type="number" id="adm-price" placeholder="ثمن الاشتراك" value="200" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 outline-none focus:border-smart-yellow font-black">
+                </div>
                 
-                <div>
-                    <p class="text-[10px] font-black mb-3 text-slate-400 uppercase">الأشهر المؤداة:</p>
+                <div class="pt-4">
+                    <p class="text-[9px] font-black mb-3 text-slate-400 uppercase tracking-widest">الأشهر المؤداة:</p>
                     <div id="adm-months" class="grid grid-cols-3 gap-2"></div>
                 </div>
 
-                <button onclick="saveToCloud()" id="btn-save" class="w-full bg-black text-smart-yellow font-black py-5 rounded-2xl shadow-xl flex items-center justify-center gap-2">
-                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg>
-                   <span>مزامنة مع السحاب</span>
+                <button onclick="saveToCloud()" id="btn-save" class="w-full bg-black text-smart-yellow font-black py-5 rounded-2xl shadow-xl flex items-center justify-center gap-3 mt-4 hover:bg-slate-800">
+                   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/></svg>
+                   <span>تحديث السحابة</span>
                 </button>
             </div>
 
-            <div id="admin-list" class="space-y-2 px-2"></div>
+            <div id="admin-list" class="space-y-2"></div>
         </div>
 
     </main>
 
-    <footer class="text-center py-10 text-slate-400">
-        <p class="text-[10px] font-black tracking-widest uppercase mb-1">Smart WIFI Azilal © 2026</p>
-        <p class="text-[9px]">Cloud Integrated System</p>
+    <footer class="text-center py-16 text-slate-300">
+        <div class="w-16 h-1 bg-smart-yellow mx-auto rounded-full mb-4 opacity-30"></div>
+        <p class="text-[9px] font-black tracking-[0.4em] uppercase mb-1">Smart WIFI Azilal System</p>
+        <p class="text-[8px] font-bold">Cloud Infrastructure © 2026</p>
     </footer>
 
+    <!-- Firebase Logic -->
     <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, deleteDoc, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // CONFIG
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'smart-wifi-azilal-v2';
 
         const months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
         let selectedPaid = [];
         let allClients = [];
 
-        // Auth Setup
-        async function init() {
-            const auth = getAuth();
-            await signInAnonymously(auth);
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    document.getElementById('auth-loader').classList.add('hidden');
-                    document.getElementById('login-view').classList.remove('hidden');
-                    initAdminGrid();
-                    listenToCloud();
-                }
-            });
+        // Auth & Sync
+        async function startApp() {
+            try {
+                await signInAnonymously(auth);
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        document.getElementById('main-loader').classList.add('hidden');
+                        document.getElementById('status-text').innerText = "متصل سحابياً ✓";
+                        document.getElementById('cloud-status').classList.add('bg-green-50');
+                        document.getElementById('login-view').classList.remove('hidden');
+                        
+                        initAdminGrid();
+                        syncWithCloud();
+                    }
+                });
+            } catch(e) {
+                document.getElementById('status-text').innerText = "خطأ في الاتصال!";
+            }
         }
 
         function initAdminGrid() {
             const grid = document.getElementById('adm-months');
+            grid.innerHTML = "";
             months.forEach(m => {
                 const b = document.createElement('button');
                 b.innerText = m;
-                b.className = "p-2 text-[10px] font-black border-2 rounded-xl bg-white border-slate-100 text-slate-300 transition-all";
+                b.className = "p-2 text-[9px] font-black border-2 rounded-xl bg-white border-slate-100 text-slate-300 transition-all";
                 b.onclick = () => {
                     if(selectedPaid.includes(m)) {
                         selectedPaid = selectedPaid.filter(x => x !== m);
@@ -178,105 +185,109 @@
             });
         }
 
-        function listenToCloud() {
-            const { db, collection, appId, onSnapshot } = window.smartDB;
+        function syncWithCloud() {
             const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'clients');
-            
-            onSnapshot(colRef, (snapshot) => {
-                allClients = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            onSnapshot(colRef, (snap) => {
+                allClients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
                 renderAdminList();
-            }, (err) => console.error("Cloud Error:", err));
+            }, (err) => console.log("Sync Error"));
         }
 
         window.handleLogin = function() {
-            const id = document.getElementById('login-id').value.trim();
-            if(id === "0602359188") {
+            const idInput = document.getElementById('login-id').value.trim();
+            if(!idInput) return;
+
+            if(idInput === "0602359188") {
                 document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('cloud-status').classList.add('hidden');
                 document.getElementById('admin-view').classList.remove('hidden');
                 return;
             }
 
-            const user = allClients.find(c => c.id === id);
-            if(user) {
+            const client = allClients.find(c => c.id === idInput);
+            if(client) {
                 document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('cloud-status').classList.add('hidden');
                 document.getElementById('client-view').classList.remove('hidden');
-                document.getElementById('client-name-display').innerText = user.name;
-                document.getElementById('client-price').innerText = user.price + " د";
+                document.getElementById('client-name-display').innerText = client.name;
+                document.getElementById('client-price').innerText = client.price + " د";
                 
-                const unpaid = months.length - user.paid.length;
-                document.getElementById('client-due').innerText = (unpaid * user.price) + " د";
+                const unpaid = months.length - client.paid.length;
+                document.getElementById('client-due').innerText = (unpaid * client.price) + " د";
 
                 const list = document.getElementById('months-list');
                 list.innerHTML = "";
                 months.forEach(m => {
-                    const ok = user.paid.includes(m);
+                    const ok = client.paid.includes(m);
                     list.innerHTML += `
                         <div class="flex justify-between items-center p-6">
-                            <span class="font-black text-slate-700">${m}</span>
-                            <span class="px-4 py-1 rounded-full text-[10px] font-black ${ok ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-50 text-red-500 border border-red-100'}">
-                                ${ok ? 'تم الأداء ✓' : 'في الانتظار ✖'}
+                            <span class="font-black text-slate-700 italic">${m}</span>
+                            <span class="px-4 py-1 rounded-full text-[9px] font-black border ${ok ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-500 border-red-100'}">
+                                ${ok ? 'خالص ✓' : 'في الانتظار ✖'}
                             </span>
                         </div>
                     `;
                 });
             } else {
-                alert("رقم المعرف غير مسجل في السحابة!");
+                alert("عذراً، المعرف غير موجود!");
             }
         };
 
         window.saveToCloud = async function() {
-            const { db, doc, setDoc, appId } = window.smartDB;
             const name = document.getElementById('adm-name').value;
             const id = document.getElementById('adm-id').value;
             const price = parseInt(document.getElementById('adm-price').value);
 
-            if(!name || !id) return alert("بيانات ناقصة!");
+            if(!name || !id) return alert("املأ الحقول!");
 
             const btn = document.getElementById('btn-save');
             btn.disabled = true;
-            btn.innerHTML = "جاري المزامنة...";
+            btn.innerHTML = "جاري الحفظ...";
 
             try {
                 await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clients', id), {
-                    name, price, paid: [...selectedPaid], updated: Date.now()
+                    name, price, paid: [...selectedPaid], lastUpdate: Date.now()
                 });
-                alert("تم التحديث سحابياً!");
-                document.getElementById('adm-name').value = "";
-                document.getElementById('adm-id').value = "";
-                selectedPaid = [];
-                document.querySelectorAll('#adm-months button').forEach(b => b.className = "p-2 text-[10px] font-black border-2 rounded-xl bg-white border-slate-100 text-slate-300 transition-all");
+                alert("تم التحديث بنجاح!");
+                resetAdminForm();
             } catch(e) {
-                alert("خطأ في الاتصال بالسحابة");
+                alert("حدث خطأ!");
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = "مزامنة مع السحاب";
+                btn.innerHTML = "تحديث السحابة";
             }
         };
 
+        function resetAdminForm() {
+            document.getElementById('adm-name').value = "";
+            document.getElementById('adm-id').value = "";
+            selectedPaid = [];
+            initAdminGrid();
+        }
+
         function renderAdminList() {
             const cont = document.getElementById('admin-list');
-            cont.innerHTML = "<p class='text-[10px] font-black text-slate-400 mb-2 mt-4 uppercase'>المشتركين في السحابة:</p>";
+            cont.innerHTML = "<p class='text-[9px] font-black text-slate-400 mb-3 uppercase tracking-widest px-4 mt-6'>لائحة السحابة:</p>";
             allClients.forEach(c => {
-                const div = document.createElement('div');
-                div.className = "bg-white p-4 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm mb-2 animate-in fade-in zoom-in duration-300";
-                div.innerHTML = `
+                const row = document.createElement('div');
+                row.className = "bg-white p-5 rounded-2xl border border-slate-50 flex justify-between items-center shadow-sm mb-2 mx-2";
+                row.innerHTML = `
                     <div>
-                        <p class="font-black text-sm text-slate-800">${c.name}</p>
+                        <p class="font-black text-sm text-slate-800 leading-tight">${c.name}</p>
                         <p class="text-[9px] text-slate-400 font-bold italic">ID: ${c.id}</p>
                     </div>
                     <button class="text-red-500 font-black text-[10px] bg-red-50 px-3 py-1 rounded-lg">حذف</button>
                 `;
-                div.querySelector('button').onclick = async () => {
-                    if(confirm("حذف من السحابة؟")) {
-                        const { db, doc, deleteDoc, appId } = window.smartDB;
+                row.querySelector('button').onclick = async () => {
+                    if(confirm("حذف نهائي؟")) {
                         await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clients', c.id));
                     }
                 };
-                cont.appendChild(div);
+                cont.appendChild(row);
             });
         }
 
-        init();
+        startApp();
     </script>
 </body>
 </html>
