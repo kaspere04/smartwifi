@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -6,198 +7,220 @@
     <title>Smart WIFI Azilal</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <style>
         body { font-family: 'Cairo', sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; overflow-x: hidden; }
         .bg-smart-yellow { background-color: #ffcc00; }
         .text-smart-yellow { color: #ffcc00; }
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #000; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        input, button { -webkit-appearance: none; border-radius: 1rem; }
+        .btn-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3); }
+        .input-focus:focus { border-color: #ffcc00; outline: none; box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.2); }
+        .loading-dot { animation: blink 1.4s infinite both; }
+        @keyframes blink { 0% { opacity: .2; } 20% { opacity: 1; } 100% { opacity: .2; } }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="min-h-screen pb-10">
 
-    <!-- Header -->
-    <header class="bg-black text-white py-8 border-b-8 border-smart-yellow text-center shadow-xl">
-        <div class="inline-block p-4 bg-smart-yellow rounded-2xl mb-3 shadow-lg transform rotate-2">
-            <svg width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+    <!-- Header (الواجهة الرئيسية) -->
+    <header class="bg-black text-white py-10 border-b-8 border-smart-yellow text-center shadow-2xl relative">
+        <div class="inline-block p-4 bg-smart-yellow rounded-2xl mb-2 transform rotate-2 shadow-lg">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
         </div>
         <h1 class="text-3xl font-black italic tracking-tighter uppercase leading-none">SMART WIFI</h1>
         <div class="inline-block bg-smart-yellow text-black px-4 py-1 text-3xl font-black italic mt-1 rounded-lg">AZILAL</div>
     </header>
 
-    <main class="max-w-md mx-auto px-6 -mt-6">
+    <main class="max-w-md mx-auto px-6 -mt-6 relative z-10">
         
-        <!-- Status Box -->
-        <div id="status-box" class="bg-white p-4 rounded-2xl shadow-lg flex items-center justify-center gap-3 mb-6 border border-slate-100">
-            <div id="loader-icon" class="loader"></div>
-            <span id="status-text" class="text-xs font-bold text-slate-500">جاري الاتصال...</span>
-        </div>
-
-        <!-- Login View -->
-        <div id="login-view" class="bg-white rounded-[2rem] shadow-2xl p-8 hidden">
-            <h2 class="text-xl font-black text-center text-slate-800 mb-6">بوابة الدخول</h2>
+        <!-- واجهة تسجيل الدخول (تظهر دائماً فوراً) -->
+        <div id="login-section" class="bg-white rounded-[2rem] shadow-2xl p-8 border border-white">
+            <div class="text-center mb-6">
+                <h2 class="text-xl font-black text-slate-800">بوابة المشتركين</h2>
+                <p class="text-slate-400 text-[10px] font-bold uppercase mt-1">أدخل المعرف الخاص بك</p>
+            </div>
             <div class="space-y-4">
-                <input type="text" id="login-id" placeholder="رقم المعرف الخاص بك" class="w-full p-4 bg-slate-50 rounded-xl border-2 border-slate-100 focus:border-smart-yellow outline-none text-center font-bold text-lg">
-                <button onclick="handleLogin()" class="w-full bg-black text-smart-yellow font-black py-4 rounded-xl shadow-lg flex items-center justify-center gap-2">
-                    <span>دخول</span>
+                <input type="text" id="login-id" placeholder="06XXXXXXXX" class="w-full p-4 bg-slate-50 rounded-2xl border-2 border-slate-100 input-focus text-center font-black text-xl transition-all">
+                <button onclick="attemptLogin()" class="w-full bg-black text-smart-yellow font-black py-5 rounded-2xl btn-shadow flex items-center justify-center gap-2 active:scale-95 transition-all">
+                    <span>تسجيل الدخول</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M15 3l6 6-6 6M21 9H9"/></svg>
                 </button>
             </div>
         </div>
 
-        <!-- Client View -->
-        <div id="client-view" class="hidden space-y-4">
-            <div class="bg-black text-white p-6 rounded-[2rem] shadow-xl relative">
-                <p class="text-smart-yellow text-[10px] font-bold uppercase mb-1">المشترك</p>
-                <h3 id="c-name" class="text-2xl font-black">---</h3>
-                <button onclick="location.reload()" class="absolute top-4 left-4 text-white/50 text-xs">خروج</button>
+        <!-- واجهة المشترك (تظهر بعد الدخول) -->
+        <div id="client-section" class="hidden space-y-4 animate-in fade-in duration-500">
+            <div class="bg-black text-white p-6 rounded-[2rem] shadow-xl relative border-r-8 border-smart-yellow">
+                <p class="text-smart-yellow text-[10px] font-bold uppercase mb-1">الاسم الكامل</p>
+                <h3 id="display-name" class="text-2xl font-black italic">---</h3>
+                <button onclick="location.reload()" class="absolute top-4 left-4 text-white/30 hover:text-white text-[10px] font-bold border border-white/10 px-3 py-1 rounded-full uppercase">خروج</button>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <div class="bg-white p-4 rounded-2xl border text-center">
-                    <p class="text-[9px] text-slate-400 font-bold mb-1 uppercase">الثمن</p>
-                    <span id="c-price" class="font-black text-lg">0</span>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-3xl border border-slate-100 shadow-sm text-center">
+                    <p class="text-slate-400 text-[10px] font-bold uppercase mb-1">الاشتراك</p>
+                    <h4 id="display-price" class="text-xl font-black italic">0 درهم</h4>
                 </div>
-                <div class="bg-red-600 text-white p-4 rounded-2xl text-center shadow-lg shadow-red-100">
-                    <p class="text-white/50 text-[9px] font-bold mb-1 uppercase">الباقي</p>
-                    <span id="c-due" class="font-black text-lg">0</span>
+                <div class="bg-red-600 text-white p-5 rounded-3xl shadow-lg shadow-red-100 text-center">
+                    <p class="text-white/60 text-[10px] font-bold uppercase mb-1">بذمتكم</p>
+                    <h4 id="display-due" class="text-xl font-black italic">0 درهم</h4>
                 </div>
             </div>
 
-            <div class="bg-white rounded-[2rem] shadow-lg border border-slate-50 overflow-hidden">
-                <div class="p-4 bg-slate-50 border-b font-bold text-xs">سجل الدفعات 2026</div>
-                <div id="m-list" class="divide-y"></div>
+            <div class="bg-white rounded-[2rem] shadow-xl overflow-hidden border border-slate-50">
+                <div class="p-4 bg-slate-50 border-b flex justify-between items-center">
+                    <span class="font-black text-slate-700 text-sm">سجل الدفعات 2026</span>
+                </div>
+                <div id="payments-list" class="divide-y divide-slate-50"></div>
             </div>
         </div>
 
-        <!-- Admin View -->
-        <div id="admin-view" class="hidden space-y-4">
-            <div class="bg-smart-yellow p-6 rounded-2xl font-black italic">لوحة الإدارة السحابية</div>
-            <div class="bg-white p-6 rounded-2xl shadow-xl space-y-3">
-                <input type="text" id="adm-name" placeholder="الاسم" class="w-full p-3 bg-slate-50 rounded-lg border font-bold">
-                <input type="text" id="adm-id" placeholder="ID" class="w-full p-3 bg-slate-50 rounded-lg border font-bold">
-                <div id="adm-months-grid" class="grid grid-cols-3 gap-1 py-2"></div>
-                <button onclick="saveToCloud()" id="save-btn" class="w-full bg-black text-smart-yellow font-black py-4 rounded-xl shadow-lg">حفظ في السحاب</button>
+        <!-- واجهة الإدارة (تظهر عند إدخال كود الإدارة) -->
+        <div id="admin-section" class="hidden space-y-6 animate-in fade-in">
+            <div class="bg-smart-yellow p-6 rounded-[2rem] shadow-lg text-black font-black italic text-xl">لوحة التحكم السحابية</div>
+            <div class="bg-white p-8 rounded-[2rem] shadow-2xl space-y-4">
+                <input type="text" id="adm-name" placeholder="اسم المشترك الجديد" class="w-full p-4 bg-slate-50 rounded-xl border font-bold focus:border-black outline-none">
+                <input type="text" id="adm-id" placeholder="رقم المعرف (ID)" class="w-full p-4 bg-slate-50 rounded-xl border font-bold focus:border-black outline-none">
+                <div id="adm-months" class="grid grid-cols-3 gap-2 py-2"></div>
+                <button onclick="saveUser()" id="save-btn" class="w-full bg-black text-smart-yellow font-black py-5 rounded-xl shadow-lg">حفظ ومزامنة</button>
             </div>
             <div id="adm-list" class="space-y-2"></div>
         </div>
 
     </main>
 
+    <!-- شريط الحالة في الأسفل (بدل الشاشة الكاملة) -->
+    <div class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white/90 backdrop-blur px-4 py-2 rounded-full shadow-lg border border-slate-100 flex items-center gap-2 z-50">
+        <div id="status-dot" class="w-2 h-2 bg-slate-300 rounded-full"></div>
+        <span id="status-txt" class="text-[9px] font-black uppercase text-slate-500 italic tracking-widest">انتظار الاتصال...</span>
+    </div>
+
+    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getFirestore, doc, setDoc, getDoc, collection, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // الروابط البرمجية (Environment Config)
-        const fCfg = JSON.parse(__firebase_config);
-        const app = initializeApp(fCfg);
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const aId = typeof __app_id !== 'undefined' ? __app_id : 'smartwifi-cloud';
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'smart-wifi-final';
 
         const months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
-        let selPaid = [];
+        let selectedMonths = [];
         let clients = [];
 
-        // تشغيل النظام
-        async function run() {
+        // 1. الاتصال في الخلفية
+        async function connect() {
             try {
                 await signInAnonymously(auth);
-                document.getElementById('loader-icon').classList.add('hidden');
-                document.getElementById('status-text').innerText = "متصل بالسحاب ✓";
-                document.getElementById('login-view').classList.remove('hidden');
-                
-                initGrid();
-                const col = collection(db, 'artifacts', aId, 'public', 'data', 'clients');
-                onSnapshot(col, (s) => {
-                    clients = s.docs.map(d => ({id: d.id, ...d.data()}));
-                    renderList();
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        document.getElementById('status-dot').className = "w-2 h-2 bg-green-500 shadow-[0_0_5px_#22c55e]";
+                        document.getElementById('status-txt').innerText = "متصل بالسحابة ✓";
+                        syncData();
+                    }
                 });
-            } catch(e) {
-                document.getElementById('status-text').innerText = "خطأ في الاتصال";
+            } catch (e) {
+                document.getElementById('status-txt').innerText = "مشكلة في الشبكة!";
             }
         }
 
-        function initGrid() {
-            const g = document.getElementById('adm-months-grid');
+        // 2. مزامنة البيانات
+        function syncData() {
+            const col = collection(db, 'artifacts', appId, 'public', 'data', 'clients');
+            onSnapshot(col, (snap) => {
+                clients = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderAdminList();
+            });
+        }
+
+        // 3. التعامل مع الدخول
+        window.attemptLogin = () => {
+            const input = document.getElementById('login-id').value.trim();
+            if (!input) return;
+
+            if (input === "0602359188") {
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('admin-section').classList.remove('hidden');
+                initAdminGrid();
+                return;
+            }
+
+            const user = clients.find(c => c.id === input);
+            if (user) {
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('client-section').classList.remove('hidden');
+                document.getElementById('display-name').innerText = user.name;
+                document.getElementById('display-price').innerText = user.price + " درهم";
+                const dueCount = months.length - user.paid.length;
+                document.getElementById('display-due').innerText = (dueCount * user.price) + " درهم";
+
+                const list = document.getElementById('payments-list');
+                list.innerHTML = "";
+                months.forEach(m => {
+                    const isPaid = user.paid.includes(m);
+                    list.innerHTML += `
+                        <div class="flex justify-between items-center p-5 text-sm font-black">
+                            <span class="text-slate-600 italic">${m}</span>
+                            <span class="${isPaid ? 'text-green-600' : 'text-red-500'}">${isPaid ? 'تم الدفع ✓' : 'بذمتكم ✖'}</span>
+                        </div>`;
+                });
+            } else {
+                alert("عذراً، هذا المعرف غير مسجل لدينا.");
+            }
+        };
+
+        // 4. الإدارة
+        function initAdminGrid() {
+            const grid = document.getElementById('adm-months');
+            grid.innerHTML = "";
             months.forEach(m => {
                 const b = document.createElement('button');
                 b.innerText = m;
-                b.className = "p-1 text-[9px] font-bold border rounded bg-white text-slate-300";
+                b.className = "p-2 text-[9px] font-black border-2 rounded-xl bg-white border-slate-100 text-slate-300 transition-all";
                 b.onclick = () => {
-                    if(selPaid.includes(m)) {
-                        selPaid = selPaid.filter(x => x !== m);
-                        b.classList.remove('bg-green-500', 'text-white');
+                    if (selectedMonths.includes(m)) {
+                        selectedMonths = selectedMonths.filter(x => x !== m);
+                        b.classList.remove('bg-green-500', 'text-white', 'border-green-500');
                     } else {
-                        selPaid.push(m);
-                        b.classList.add('bg-green-500', 'text-white');
+                        selectedMonths.push(m);
+                        b.classList.add('bg-green-500', 'text-white', 'border-green-500');
                     }
                 };
-                g.appendChild(b);
+                grid.appendChild(b);
             });
         }
 
-        window.handleLogin = () => {
-            const val = document.getElementById('login-id').value.trim();
-            if(val === "0602359188") {
-                document.getElementById('login-view').classList.add('hidden');
-                document.getElementById('admin-view').classList.remove('hidden');
-                return;
-            }
-            const u = clients.find(c => c.id === val);
-            if(u) {
-                document.getElementById('login-view').classList.add('hidden');
-                document.getElementById('status-box').classList.add('hidden');
-                document.getElementById('client-view').classList.remove('hidden');
-                document.getElementById('c-name').innerText = u.name;
-                document.getElementById('c-price').innerText = u.price + " د";
-                const d = (months.length - u.paid.length) * u.price;
-                document.getElementById('c-due').innerText = d + " د";
-                
-                const list = document.getElementById('m-list');
-                list.innerHTML = "";
-                months.forEach(m => {
-                    const ok = u.paid.includes(m);
-                    list.innerHTML += `<div class="flex justify-between p-4 text-xs font-bold">
-                        <span>${m}</span>
-                        <span class="${ok ? 'text-green-600' : 'text-red-500'}">${ok ? 'تم الأداء' : 'غير مؤدى'}</span>
-                    </div>`;
-                });
-            } else { alert("المعرف غير موجود"); }
-        };
-
-        window.saveToCloud = async () => {
-            const n = document.getElementById('adm-name').value;
-            const i = document.getElementById('adm-id').value;
-            if(!n || !i) return alert("أدخل البيانات");
+        window.saveUser = async () => {
+            const name = document.getElementById('adm-name').value;
+            const id = document.getElementById('adm-id').value;
+            if (!name || !id) return alert("أدخل بيانات الزبون");
             const btn = document.getElementById('save-btn');
-            btn.innerText = "جاري الحفظ...";
+            btn.innerText = "جاري المزامنة...";
+            btn.disabled = true;
             try {
-                await setDoc(doc(db, 'artifacts', aId, 'public', 'data', 'clients', i), {
-                    name: n, price: 200, paid: [...selPaid]
+                await setDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clients', id), {
+                    name, price: 200, paid: [...selectedMonths]
                 });
-                alert("تم الحفظ!");
+                alert("تم الحفظ في السحاب!");
                 location.reload();
-            } catch(e) { alert("خطأ!"); }
+            } catch (e) { alert("حدث خطأ!"); btn.disabled = false; btn.innerText = "حفظ ومزامنة"; }
         };
 
-        function renderList() {
-            const l = document.getElementById('adm-list');
-            l.innerHTML = "";
+        function renderAdminList() {
+            const list = document.getElementById('adm-list');
+            list.innerHTML = "<p class='text-[10px] font-black text-slate-400 px-4 mt-6 mb-2'>لائحة الزبائن الحالية:</p>";
             clients.forEach(c => {
                 const d = document.createElement('div');
-                d.className = "bg-white p-3 rounded-xl border flex justify-between items-center text-sm font-bold shadow-sm";
-                d.innerHTML = `<span>${c.name}</span><button class="text-red-500 text-xs">حذف</button>`;
+                d.className = "bg-white p-4 rounded-2xl border flex justify-between items-center mx-2 shadow-sm mb-2";
+                d.innerHTML = `<div><p class="font-black text-sm">${c.name}</p><p class="text-[9px] text-slate-400">ID: ${c.id}</p></div><button class="text-red-500 text-xs bg-red-50 px-3 py-1 rounded-lg font-bold">حذف</button>`;
                 d.querySelector('button').onclick = async () => {
-                    if(confirm("حذف؟")) await deleteDoc(doc(db, 'artifacts', aId, 'public', 'data', 'clients', c.id));
+                    if (confirm("حذف الزبون؟")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'clients', c.id));
                 };
-                l.appendChild(d);
+                list.appendChild(d);
             });
         }
 
-        run();
+        connect();
     </script>
 </body>
 </html>
