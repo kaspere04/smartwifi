@@ -1,52 +1,49 @@
-```html
+hassan
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SMART WIFI AZILAL - النسخة الاحترافية</title>
+    <title>SMART WIFI AZILAL - الإصدار النهائي المصلح</title>
     <style>
-        :root { --gold: #FFCC00; --dark: #111; --bg: #f4f7f6; --red: #e74c3c; --green: #2ecc71; --gray: #888; }
+        :root { --gold: #FFCC00; --dark: #111; --bg: #f2f2f2; --red: #e74c3c; --green: #2ecc71; }
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; background: var(--bg); color: #333; padding-bottom: 50px; }
         
-        header { background: var(--dark); color: white; padding: 30px 20px; text-align: center; border-bottom: 5px solid var(--gold); }
-        .logo-box { background: var(--gold); width: 45px; height: 45px; margin: 0 auto 10px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-        h1 { margin: 0; font-size: 18px; letter-spacing: 1px; }
+        header { background: var(--dark); color: white; padding: 25px 20px; text-align: center; border-bottom: 5px solid var(--gold); }
+        .logo-box { background: var(--gold); width: 40px; height: 40px; margin: 0 auto 10px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        h1 { margin: 0; font-size: 18px; }
 
         .container { padding: 15px; max-width: 450px; margin: 0 auto; }
-        .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eee; margin-top: -20px; position: relative; z-index: 10; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 15px; border: 1px solid #ddd; }
         
-        input, select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; text-align: center; margin-bottom: 10px; background: #fff; }
+        input, select { width: 100%; padding: 12px; border: 2px solid #eee; border-radius: 10px; font-size: 16px; text-align: center; margin-bottom: 10px; background: #fff; }
         input:focus { border-color: var(--gold); outline: none; }
         
-        .btn-main { width: 100%; padding: 15px; background: var(--dark); color: var(--gold); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .btn-main:disabled { background: #ccc; color: #666; cursor: not-allowed; }
+        .btn-main { width: 100%; padding: 15px; background: var(--dark); color: var(--gold); border: none; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 10px; }
+        .btn-main:disabled { opacity: 0.5; }
 
         .hidden { display: none !important; }
         
-        .u-card { background: var(--dark); color: white; padding: 20px; border-radius: 15px; text-align: right; border-right: 6px solid var(--gold); margin-bottom: 15px; margin-top: 20px; }
+        .u-card { background: var(--dark); color: white; padding: 20px; border-radius: 12px; border-right: 6px solid var(--gold); margin-bottom: 15px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .grid-item { background: white; padding: 12px; border-radius: 12px; border: 1px solid #eee; text-align: center; }
+        .grid-item { background: white; padding: 10px; border-radius: 10px; border: 1px solid #eee; text-align: center; }
         .grid-item b { font-size: 20px; display: block; color: var(--dark); }
 
-        .m-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; margin: 15px 0; }
-        .m-btn { padding: 12px 5px; border: 1px solid #eee; border-radius: 8px; font-size: 12px; cursor: pointer; background: #fdfdfd; color: #999; text-align: center; }
-        .m-btn.active { background: var(--gold); color: #000; border-color: var(--gold); font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .m-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 15px 0; }
+        .m-btn { padding: 12px 5px; border: 2px solid #eee; border-radius: 8px; font-size: 12px; cursor: pointer; background: #fff; color: #bbb; text-align: center; font-weight: bold; }
+        .m-btn.active { background: var(--gold); color: #000; border-color: var(--gold); }
 
-        .client-list-box { background: white; border-radius: 12px; margin-top: 10px; border: 1px solid #eee; overflow: hidden; }
-        .client-item { padding: 12px 15px; border-bottom: 1px solid #f5f5f5; display: flex; justify-content: space-between; align-items: center; }
-        .client-item:last-child { border-bottom: none; }
-        
-        .edit-btn { color: #3498db; border: 1px solid #3498db; padding: 5px 12px; border-radius: 5px; background: none; font-size: 12px; font-weight: bold; }
-        .del-btn { color: #e74c3c; border: none; background: none; margin-right: 10px; font-size: 12px; }
+        .client-item { background: white; padding: 12px; border-radius: 10px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #eee; }
+        .edit-btn { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; }
+        .del-btn { color: #dc3545; background: none; border: none; font-size: 12px; margin-right: 8px; }
 
-        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 9999; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--dark); }
+        #status-msg { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 10px 20px; border-radius: 20px; font-size: 14px; z-index: 1000; }
     </style>
 </head>
 <body>
 
-    <div id="loading-overlay" class="hidden">جاري الحفظ...</div>
+    <div id="status-msg" class="hidden">جاري الحفظ...</div>
 
     <header>
         <div class="logo-box">
@@ -56,49 +53,47 @@
     </header>
 
     <div class="container">
-        <!-- Login View -->
+        <!-- تسجيل الدخول -->
         <div id="view-login" class="card">
-            <h3 style="margin-top:0; text-align:center">تسجيل الدخول</h3>
-            <input type="text" id="login-id" placeholder="أدخل ID الخاص بك">
-            <button class="btn-main" onclick="app.login()">دخول</button>
+            <h3 style="text-align:center">دخول المشتركين</h3>
+            <input type="text" id="login-id" placeholder="ID الخاص بك">
+            <button class="btn-main" onclick="app.handleLogin()">تسجيل الدخول</button>
         </div>
 
-        <!-- Subscriber View -->
+        <!-- واجهة المشترك -->
         <div id="view-user" class="hidden">
             <div class="u-card">
-                <div style="font-size:12px; opacity:0.8">الاسم الكامل:</div>
+                <div style="font-size:11px; opacity:0.7">الزبون:</div>
                 <h2 id="u-name" style="margin:5px 0">---</h2>
                 <div id="u-year-label" style="font-size:12px; color:var(--gold)">---</div>
             </div>
             <div class="grid">
-                <div class="grid-item"><small>الاشتراك</small><b id="u-price">0</b><small>درهم</small></div>
-                <div class="grid-item" style="border-bottom: 3px solid var(--red)"><small style="color:var(--red)">الباقي</small><b id="u-due" style="color:var(--red)">0</b><small>درهم</small></div>
+                <div class="grid-item"><small>الاشتراك</small><b id="u-price">0</b></div>
+                <div class="grid-item" style="border-bottom: 4px solid var(--red)"><small>المتأخرات</small><b id="u-due" style="color:var(--red)">0</b></div>
             </div>
-            <div id="u-history" style="margin-top:15px; background:white; border-radius:15px; border:1px solid #eee; overflow:hidden"></div>
-            <button class="btn-main" style="margin-top:20px; background:#ddd; color:#333" onclick="location.reload()">خروج</button>
+            <div id="u-history" style="margin-top:15px; background:white; border-radius:12px; border:1px solid #ddd; overflow:hidden"></div>
+            <button class="btn-main" style="margin-top:20px; background:#ccc; color:#000" onclick="location.reload()">تسجيل الخروج</button>
         </div>
 
-        <!-- Admin View -->
+        <!-- واجهة الإدارة -->
         <div id="view-admin" class="hidden">
             <div class="card" style="text-align:right">
-                <h3 style="margin-top:0">لوحة التحكم</h3>
-                <input type="text" id="adm-name" placeholder="الاسم الكامل للزبون">
+                <h3 style="margin:0 0 15px 0">إدارة الزبناء</h3>
+                <input type="text" id="adm-name" placeholder="اسم الزبون">
                 <input type="text" id="adm-id" placeholder="ID (رقم الهاتف مثلاً)">
-                <input type="number" id="adm-price" placeholder="ثمن الاشتراك الشهري">
+                <input type="number" id="adm-price" placeholder="الثمن الشهري">
                 
-                <div style="margin:10px 0; border:1px solid #eee; padding:10px; border-radius:10px">
-                    <label style="font-size:12px; font-weight:bold; display:block; margin-bottom:5px">السنة المستهدفة:</label>
-                    <select id="adm-year" onchange="app.drawMonthGrid()"></select>
+                <div style="background:#f8f8f8; padding:10px; border-radius:8px; margin-bottom:10px">
+                    <label style="font-size:12px; font-weight:bold;">اختر السنة لتعديلها:</label>
+                    <select id="adm-year" onchange="app.drawGrid()"></select>
                 </div>
 
-                <label style="font-size:12px; font-weight:bold;">الأشهر المؤداة لهذه السنة:</label>
-                <div class="m-grid" id="adm-months-grid"></div>
+                <div class="m-grid" id="adm-grid"></div>
                 
-                <button class="btn-main" id="save-btn" onclick="app.saveData()">حفظ البيانات بشكل نهائي</button>
-                <button class="btn-main" style="margin-top:10px; background:#f0f0f0; color:#444" onclick="app.clearForm()">إضافة زبون جديد (تفريغ)</button>
+                <button class="btn-main" id="btn-save" onclick="app.performSave()">حفظ البيانات الآن</button>
+                <button class="btn-main" style="background:#eee; color:#333; font-size:13px" onclick="app.resetUI()">+ إضافة زبون جديد</button>
             </div>
-
-            <div id="adm-list-container"></div>
+            <div id="adm-list"></div>
         </div>
     </div>
 
@@ -107,130 +102,120 @@
         import { getFirestore, doc, setDoc, onSnapshot, collection, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        const ADMIN_CODE = "0602359188";
-        const COLLECTION_ID = "wifi_final_v8"; 
+        const PIN = "0602359188";
+        const KEY = "wifi_azilal_v9_final"; // نسخة جديدة تماماً
         const months = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
         
-        const now = new Date();
-        const currentYear = now.getFullYear();
-
-        let db, allClients = [], activePaidList = []; 
+        let db, clients = [], activePaid = []; 
+        const currentYear = new Date().getFullYear();
 
         const app = {
             async init() {
-                // ملء قائمة السنوات
-                const yr = document.getElementById('adm-year');
-                for(let i=2024; i<=2028; i++){
-                    const op = document.createElement('option');
-                    op.value = i; op.innerText = i;
-                    if(i === currentYear) op.selected = true;
-                    yr.appendChild(op);
+                const sel = document.getElementById('adm-year');
+                for(let i=2024; i<=2028; i++) {
+                    const o = document.createElement('option');
+                    o.value = i; o.innerText = i;
+                    if(i === currentYear) o.selected = true;
+                    sel.appendChild(o);
                 }
 
                 try {
                     const config = JSON.parse(__firebase_config);
-                    const fbApp = initializeApp(config);
-                    db = getFirestore(fbApp);
-                    const auth = getAuth(fbApp);
+                    const fApp = initializeApp(config);
+                    db = getFirestore(fApp);
+                    const auth = getAuth(fApp);
                     await signInAnonymously(auth);
 
-                    onSnapshot(collection(db, 'artifacts', 'wifi-manager', 'public', 'data', COLLECTION_ID), (snap) => {
-                        allClients = snap.docs.map(d => ({id: d.id, ...d.data()}));
-                        this.renderAdminList();
+                    onSnapshot(collection(db, 'artifacts', 'smart-wifi', 'public', 'data', KEY), (snap) => {
+                        clients = snap.docs.map(d => ({id: d.id, ...d.data()}));
+                        this.renderList();
                     });
                 } catch (e) { console.error(e); }
             },
 
-            login() {
+            handleLogin() {
                 const id = document.getElementById('login-id').value.trim();
-                if(id === ADMIN_CODE) {
-                    this.showView('view-admin');
-                    this.clearForm();
-                    return;
-                }
-                const user = allClients.find(c => String(c.id) === id);
-                if(user) {
-                    this.showView('view-user');
-                    this.renderUserView(user);
-                } else if(id) {
-                    alert("المعرف غير موجود");
-                }
+                if(id === PIN) { this.switchView('view-admin'); this.resetUI(); return; }
+                const user = clients.find(c => String(c.id) === id);
+                if(user) { this.switchView('view-user'); this.renderUser(user); }
+                else if(id) alert("المعرف غير مسجل");
             },
 
-            showView(v) {
-                ['view-login', 'view-user', 'view-admin'].forEach(x => document.getElementById(x).classList.add('hidden'));
-                document.getElementById(v).classList.remove('hidden');
+            switchView(id) {
+                ['view-login', 'view-user', 'view-admin'].forEach(v => document.getElementById(v).classList.add('hidden'));
+                document.getElementById(id).classList.remove('hidden');
             },
 
-            clearForm() {
+            resetUI() {
                 document.getElementById('adm-name').value = "";
                 document.getElementById('adm-id').value = "";
                 document.getElementById('adm-price').value = "";
-                activePaidList = [];
-                this.drawMonthGrid();
+                activePaid = []; // تصفير جذري
+                this.drawGrid();
             },
 
-            drawMonthGrid() {
-                const grid = document.getElementById('adm-months-grid');
-                const selectedYear = document.getElementById('adm-year').value;
+            drawGrid() {
+                const grid = document.getElementById('adm-grid');
+                const yr = document.getElementById('adm-year').value;
                 grid.innerHTML = "";
                 
                 months.forEach(m => {
-                    const key = `${selectedYear}-${m}`;
-                    const div = document.createElement('div');
-                    div.className = `m-btn ${activePaidList.includes(key) ? 'active' : ''}`;
-                    div.innerText = m;
-                    div.onclick = () => {
-                        if(activePaidList.includes(key)) {
-                            activePaidList = activePaidList.filter(k => k !== key);
-                            div.classList.remove('active');
+                    const tag = `${yr}-${m}`;
+                    const btn = document.createElement('div');
+                    btn.className = `m-btn ${activePaid.includes(tag) ? 'active' : ''}`;
+                    btn.innerText = m;
+                    btn.onclick = () => {
+                        if(activePaid.includes(tag)) {
+                            activePaid = activePaid.filter(x => x !== tag);
+                            btn.classList.remove('active');
                         } else {
-                            activePaidList.push(key);
-                            div.classList.add('active');
+                            activePaid.push(tag);
+                            btn.classList.add('active');
                         }
                     };
-                    grid.appendChild(div);
+                    grid.appendChild(btn);
                 });
             },
 
-            async saveData() {
-                const name = document.getElementById('adm-name').value.trim();
+            async performSave() {
+                const n = document.getElementById('adm-name').value.trim();
                 const id = document.getElementById('adm-id').value.trim();
-                const price = document.getElementById('adm-price').value;
+                const p = document.getElementById('adm-price').value;
 
-                if(!name || !id || !price) return alert("المرجو ملء جميع البيانات");
+                if(!n || !id || !p) return alert("أدخل كل البيانات");
 
-                const loader = document.getElementById('loading-overlay');
-                loader.classList.remove('hidden');
+                const msg = document.getElementById('status-msg');
+                msg.classList.remove('hidden');
+                document.getElementById('btn-save').disabled = true;
 
                 try {
-                    // حفظ البيانات مع ضمان بقاء مصفوفة الشهور مستقلة لكل زبون
-                    await setDoc(doc(db, 'artifacts', 'wifi-manager', 'public', 'data', COLLECTION_ID, id), {
-                        name: name,
-                        price: Number(price),
-                        paid: [...activePaidList] // نسخة من المصفوفة لضمان عدم التداخل
+                    // إرسال نسخة "مجمدة" من المصفوفة لضمان عدم التلاعب
+                    const dataToSave = JSON.parse(JSON.stringify(activePaid));
+                    
+                    await setDoc(doc(db, 'artifacts', 'smart-wifi', 'public', 'data', KEY, id), {
+                        name: n,
+                        price: Number(p),
+                        paid: dataToSave
                     });
                     
                     alert("تم الحفظ بنجاح ✅");
-                    this.clearForm(); // تصفير النموذج فوراً بعد الحفظ
+                    this.resetUI(); // تصفير النموذج فوراً
                 } catch (e) {
-                    alert("خطأ في الحفظ، جرب مرة أخرى");
+                    alert("خطأ في الاتصال بالسحاب");
                 } finally {
-                    loader.classList.add('hidden');
+                    msg.classList.add('hidden');
+                    document.getElementById('btn-save').disabled = false;
                 }
             },
 
-            renderAdminList() {
-                const cont = document.getElementById('adm-list-container');
-                if(!cont) return;
-                cont.innerHTML = "<p style='font-size:12px; margin:15px 5px'>قائمة الزبناء المسجلين:</p>";
-                const box = document.createElement('div');
-                box.className = "client-list-box";
-                
-                allClients.forEach(c => {
-                    const item = document.createElement('div');
-                    item.className = "client-item";
-                    item.innerHTML = `<div><b>${c.name}</b><br><small style="color:#888">${c.id}</small></div>`;
+            renderList() {
+                const list = document.getElementById('adm-list');
+                if(!list) return;
+                list.innerHTML = "<p style='font-size:11px; color:#888; margin:15px 5px'>قائمة الزبناء الحالية:</p>";
+                clients.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = "client-item";
+                    div.innerHTML = `<div><b>${c.name}</b><br><small>${c.id}</small></div>`;
                     
                     const actions = document.createElement('div');
                     const eb = document.createElement('button');
@@ -239,47 +224,42 @@
                         document.getElementById('adm-name').value = c.name;
                         document.getElementById('adm-id').value = c.id;
                         document.getElementById('adm-price').value = c.price;
-                        activePaidList = Array.isArray(c.paid) ? [...c.paid] : [];
-                        this.drawMonthGrid();
+                        activePaid = Array.isArray(c.paid) ? [...c.paid] : [];
+                        this.drawGrid();
                         window.scrollTo({top: 0, behavior: 'smooth'});
                     };
 
-                    const dbtn = document.createElement('button');
-                    dbtn.className = "del-btn"; dbtn.innerText = "حذف";
-                    dbtn.onclick = async () => {
-                        if(confirm("هل تريد حذف هذا الزبون؟")) {
-                            await deleteDoc(doc(db, 'artifacts', 'wifi-manager', 'public', 'data', COLLECTION_ID, c.id));
-                        }
+                    const dbn = document.createElement('button');
+                    dbn.className = "del-btn"; dbn.innerText = "حذف";
+                    dbn.onclick = async () => {
+                        if(confirm("حذف الزبون؟")) await deleteDoc(doc(db, 'artifacts', 'smart-wifi', 'public', 'data', KEY, c.id));
                     };
 
-                    actions.append(eb, dbtn);
-                    item.appendChild(actions);
-                    box.appendChild(item);
+                    actions.append(eb, dbn);
+                    div.appendChild(actions);
+                    list.appendChild(div);
                 });
-                cont.appendChild(box);
             },
 
-            renderUserView(u) {
+            renderUser(u) {
                 document.getElementById('u-name').innerText = u.name;
-                document.getElementById('u-price').innerText = u.price;
-                document.getElementById('u-year-label').innerText = `كشف مستحقات سنة ${currentYear}`;
+                document.getElementById('u-price').innerText = u.price + " درهم";
+                document.getElementById('u-year-label').innerText = `حالة الأداء لسنة ${currentYear}`;
                 
-                const passedMonths = months.slice(0, now.getMonth() + 1);
-                const unpaidCount = passedMonths.filter(m => !u.paid.includes(`${currentYear}-${m}`)).length;
-                document.getElementById('u-due').innerText = unpaidCount * u.price;
+                const curM = new Date().getMonth();
+                const visible = months.slice(0, curM + 1);
+                const unpaid = visible.filter(m => !u.paid.includes(`${currentYear}-${m}`)).length;
+                document.getElementById('u-due').innerText = (unpaid * u.price) + " درهم";
 
-                let html = "";
-                passedMonths.forEach(m => {
-                    const isPaid = u.paid.includes(`${currentYear}-${m}`);
-                    html += `
-                    <div style="display:flex; justify-content:space-between; padding:12px 15px; border-bottom:1px solid #f8f8f8; font-size:14px; align-items:center">
+                let h = "";
+                visible.forEach(m => {
+                    const ok = u.paid.includes(`${currentYear}-${m}`);
+                    h += `<div style="display:flex; justify-content:space-between; padding:12px; border-bottom:1px solid #eee; font-size:14px">
                         <span>${m}</span>
-                        <span style="padding:4px 10px; border-radius:8px; font-size:11px; font-weight:bold; background:${isPaid?'#e8f5e9':'#ffebee'}; color:${isPaid?'#2ecc71':'#e74c3c'}">
-                            ${isPaid ? 'مؤدى ✓' : 'غير مؤدى'}
-                        </span>
+                        <b style="color:${ok?'#2ecc71':'#e74c3c'}">${ok?'مؤدى ✓':'غير مؤدى'}</b>
                     </div>`;
                 });
-                document.getElementById('u-history').innerHTML = html;
+                document.getElementById('u-history').innerHTML = h;
             }
         };
 
@@ -288,3 +268,5 @@
     </script>
 </body>
 </html>
+
+```
